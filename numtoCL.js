@@ -26,6 +26,7 @@ numtoCL.toMoney = function(num){
         z = '整',
         u = '元角分'
     num = Math.abs(num);
+    if(num>=10000000000000000){return '超出出范围!'}
     var _num = Math.floor(num*100)
     if(_num%100>0){
         var xs_str = ''
