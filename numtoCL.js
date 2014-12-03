@@ -21,10 +21,10 @@ numtoCL.toB = function(num,m){
 }
 
 numtoCL.toMoney = function(num){
-    var rmb = '人民币',
-        f = num < 0 ? '负' : ''
-        z = '整',
-        u = '元角分'
+    var rmb = '人民币'
+        ,f = num < 0 ? '负' : ''
+        ,z = '整'
+        ,u = '元角分'
     num = Math.abs(num);
     if(num>=10000000000000000){return '超出出范围!'}
     var _num = Math.floor(num*100)
