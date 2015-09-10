@@ -24,18 +24,19 @@ numtoCL.toMoney = function(num){
         ,z = '整'
         ,u = '元角分'
     num = +num;
-    _num = Math.abs(num);
+    var _num = Math.abs(num);
     if(_num>=10000000000000000){return '超出出范围!'}
     if(_num!=_num){return '参数错误!'}
-    var _num = Math.floor(num*100)
-    if(_num%100>0){
+    var _n = Math.round(_num*100)
+    _num = Math.floor(_num) * (num < 0 ? -1:1);
+    if(_n%100>0){
         var xs_str = ''
-            ,xs = _num.toString().slice(-2);
+            ,xs = _n.toString().slice(-2);
         xs_str += this.toB(xs[0]) + (xs[0] == 0 ? '' : u[1]);
         xs_str += xs[1] == 0 ? '' : this.toB(xs[1]) + u[2];
-        return rmb + this.toB(num) + u[0] + xs_str;
+        return rmb + this.toB(_num) + u[0] + xs_str;
     }else{
-        return rmb + this.toB(num) + u[0] + (xs_str ? xs_str : z);
+        return rmb + this.toB(_num) + u[0] + (xs_str ? xs_str : z);
     }
 }
 
