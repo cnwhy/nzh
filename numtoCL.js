@@ -6,7 +6,8 @@ numtoCL.toS = function(num,m){
         ,other: '负点'
         ,toCL: this.toCL
     }
-    return op.toCL(num,m||false);//默认简化10－11的叫法
+    m = typeof m == 'undefined' ? false : !!m; //默认简化10－11的叫法
+    return this.toCL.call(op,num,m);
 }
 
 numtoCL.toB = function(num,m){
@@ -16,7 +17,8 @@ numtoCL.toB = function(num,m){
         ,other: '負點' 
         ,toCL: this.toCL
     }
-    return op.toCL(num,m||true);//默认不简化10－11的叫法
+    m = typeof m == 'undefined' ? true : !!m; //默认不简化10－11的叫法
+    return this.toCL.call(op,num,m);
 }
 
 numtoCL.toMoney = function(num){
