@@ -9,7 +9,7 @@ numtoCL.toS = function(num,m){
     m = typeof m == 'undefined' ? false : !!m; //默认简化10－11的叫法
     return this.toCL.call(op,num,m);
 }
-
+Maxnumb = 9007199254740992;
 numtoCL.toB = function(num,m){
     var op = {
         ch: '零壹贰叁肆伍陆柒捌玖'
@@ -27,11 +27,11 @@ numtoCL.toMoney = function(num){
         ,u = '元角分'
     num = +num;
     var _num = Math.abs(num);
-    if(_num>=10000000000000000){return '超出出范围!'}
+    if(_num>Maxnumb){return '超出出范围!'}
     if(_num!=_num){return '参数错误!'}
     var _n = Math.round(_num*100)
     _num = Math.floor(_num) * (num < 0 ? -1:1);
-    if(_n%100>0){
+    if(_n%100>0 && (_n/100)%1>0){
         var xs_str = ''
             ,xs = _n.toString().slice(-2);
         xs_str += this.toB(xs[0]) + (xs[0] == 0 ? '' : u[1]);
@@ -56,7 +56,7 @@ numtoCL.toCL = function(num,m){
     var str_begin = "",
         str_end = "";
     if(n !== n){return '参数错误!'}
-    if(n>=10000000000000000){return '超出出范围!'}
+    if(n>9007199254740992){return '超出出范围!'}
     str_begin = num < 0 ? ch_o[0] : ''
     if(anum.length >= 2){
         var xs = anum[1];
@@ -97,7 +97,7 @@ numtoCL.toCL = function(num,m){
             d--;
         }
         if(+sn.substr(0,y)){
-            str = this.toCL(sn.substr(0,y),m) + ch_u[3+d] + this.toCL(sn.substr(y),true)
+            str = this.toCL(sn.substr(0,y),m) + ch_u[3+d] + (sn.substr(y)[0] == 0?n0:'') + this.toCL(sn.substr(y),true)
         }else{
             str = this.toCL(sn.substr(0,y),m) + this.toCL(sn.substr(y),true)
         }

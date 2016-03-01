@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>数字转中文</title>
-    <script src="../numtoCL.js"></script>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数字转中文</title>
+	<script src="../numtoCL.js"></script>
 	<script>
-        $ = function(){
-            return document.getElementById.apply(document,arguments);
-        }
-        function show(n){
-            var str = ''
-            str += numtoCL.toS(n) + '\n'
-            str += numtoCL.toB(n) + '\n'
-            str += numtoCL.toMoney(n) + '\n'
-            $('n1').value = str
-        }
+		$ = function(){
+			return document.getElementById.apply(document,arguments);
+		}
+		function show(n){
+			var str = '';
+			str += numtoCL.toS(n) + '\n';
+			str += numtoCL.toB(n) + '\n';
+			str += numtoCL.toMoney(n) + '\n';
+			$('n1').value = str;
+		}
 	</script>
-	</head>
-	<body>
-	   <input id="n" type="text" onkeyup="show(this.value)" />
-	   <button onclick="show($('n').value)">计算</button>
-	   <br />结果：<br />
-	   <textarea id="n1" cols="100" rows="3"></textarea>
-	</body>
+</head>
+<body>
+	<input id="n" type="text" onkeyup="show(this.value)" />
+	<button onclick="show($('n').value)">计算</button>
+	<br />结果：<br />
+	<textarea id="n1" cols="100" rows="3"></textarea>
+</body>
 </html>
