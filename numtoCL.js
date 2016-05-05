@@ -1,108 +1,249 @@
-var numtoCL = {}
-numtoCL.toS = function(num,m){
-    var op = {
-        ch: '零一二三四五六七八九'
-        ,ch_u: '个十百千万亿'
-        ,other: '负点'
-        ,toCL: this.toCL
-    }
-    m = typeof m == 'undefined' ? false : !!m; //默认简化10－11的叫法
-    return this.toCL.call(op,num,m);
-}
-Maxnumb = 9007199254740992;
-numtoCL.toB = function(num,m){
-    var op = {
-        ch: '零壹贰叁肆伍陆柒捌玖'
-        ,ch_u: '个拾佰仟万亿'
-        ,other: '負點' 
-        ,toCL: this.toCL
-    }
-    m = typeof m == 'undefined' ? true : !!m; //默认不简化10－11的叫法
-    return this.toCL.call(op,num,m);
-}
+/* 
+待优化点
+1.小数点拆分计算 1
+2.代码简洁化 1
+3.亿亿转万万亿 1
 
-numtoCL.toMoney = function(num){
-    var rmb = '人民币'
-        ,z = '整'
-        ,u = '元角分'
-    num = +num;
-    var _num = Math.abs(num);
-    if(_num>Maxnumb){return '超出出范围!'}
-    if(_num!=_num){return '参数错误!'}
-    var _n = Math.round(_num*100)
-    _num = Math.floor(_num) * (num < 0 ? -1:1);
-    if(_n%100>0 && (_n/100)%1>0){
-        var xs_str = ''
-            ,xs = _n.toString().slice(-2);
-        xs_str += this.toB(xs.charAt(0)) + (xs.charAt(0) == 0 ? '' : u.charAt(1));
-        xs_str += xs.charAt(1) == 0 ? '' : this.toB(xs.charAt(1)) + u.charAt(2);
-        return rmb + this.toB(_num) + u.charAt(0) + xs_str;
-    }else{
-        return rmb + this.toB(_num) + u.charAt(0) + (xs_str ? xs_str : z);
+待补充点
+1.中文数字转阿拉伯数字 1
+2.港台地区支持
+3.自定义转换
+ */
+(function (name, factory) {
+    if (typeof define === 'function' && (define.amd || define.cmd)) {
+        define([], factory);
+    } else if (typeof window !== "undefined" || typeof self !== "undefined") {
+        var global = typeof window !== "undefined" ? window : self;
+        global[name] = factory();
+    } else {
+        throw new Error("加载 " + name + " 模块失败！，请检查您的环境！")
     }
-}
+}('numtoCL', function () {
+    var langs = {
+        s:{
+            ch: '零一二三四五六七八九'
+            ,ch_u: '个十百千万亿'
+            ,other: '负点'
+        },
+        b:{
+            ch: '零壹贰叁肆伍陆柒捌玖'
+            ,ch_u: '个拾佰仟万亿'
+            ,other: '负点'
+            ,m_t: '人民币'
+            ,m_z: '整'
+            ,m_u: '元角分'
+        },
+        hk_s:{
+            ch: '零一二三四五六七八九'
+            ,ch_u: '個十百千萬億'
+            ,other: '負點' 
+        },
+        hk_b:{
+            ch: '零壹貳參肆伍陸柒捌玖'
+            ,ch_u: '個拾佰仟萬億'
+            ,other: '負點' 
+            ,m_t: '$'
+            ,m_z: '整'
+            ,m_u: '圓角分'
+        }
+    }
+    var regs = {
+        number : /^([+-])?0*(\d+)(\.(\d+))?$/
+        ,number_e: /^([+-])?0*(\d+)(\.(\d+))?(e([+-])?(\d+))?$/  //科学计数法,下次实现
+        ,is10to19 : /^1\d$/
+    }
+    function unshift0(arr,n){
+        if(n == null) n=1; 
+        for(;n--;) arr.unshift(0);
+    }
+    function centerarr(barr,sarr){
+        for(var i=0;i<sarr.length;i++){
+            barr.splice(i,1,sarr[i]);
+        }
+        sarr.splice(0,sarr.length);
+        if(arguments.length > 2){
+            var r = [].slice.call(arguments,2);
+            r.unshift(barr);
+            centerarr.apply(null,r);
+        }
+        return barr;
+    }
+    function toCL(num,m,ww,dg){
+        var result = regs.number.exec(num.toString());
+        if(!result && typeof num == "number"){
+            //return '超出出范围!'
+            return num;
+        }else if(!result){
+            //return '参数错误!'
+            return num;
+        }
+        var _ww = ww == null ? true : ww;
+        var ch = this.ch
+            ,ch_u = this.ch_u
+            ,ch_o = this.other
+            ,n0 = ch.charAt(0)
+            ,reg = new RegExp(n0+"*$")
+            ,reg1 = new RegExp(n0+"+",'g')
+            ,reg2 = new RegExp("0*$")
+            //,reg3 = new RegExp(ch_u.charAt(5)+'{2}')
+        var _int = result[2]
+            ,_decimal = result[4]
+            ,_minus = result[1] == "-";
+        var int = ""
+            ,dicimal = ""
+            ,minus = _minus ? ch_o.charAt(0) : ''; //符号位
+        
+        //转换小数部分
+        if(_decimal){
+            _decimal = _decimal.replace(reg2,""); //去除尾部0
+            for(var x=0 ; x < _decimal.length ; x++){
+                dicimal += ch.charAt(+_decimal.charAt(x));
+            }
+            dicimal = dicimal ? ch_o.charAt(1) + dicimal : "";
+        }
 
-numtoCL.toCL = function(num,m){
-    var n = Math.floor(Math.abs(num))
-        ,snum = Math.abs(num).toString()
-        ,sn = m? snum.replace(/\..*$/,'') : n.toString()
-        ,anum = snum.split('.');
-    var ch = this.ch || '零一二三四五六七八九'
-        ,ch_u = this.ch_u || '个十百千万亿'
-        ,ch_o = this.other || '负点'
-        ,n0 = ch.charAt(0)
-        ,reg = new RegExp(ch.charAt(0)+"*$")
-        ,reg1 = new RegExp(ch.charAt(0)+"+",'g')
-    var str_begin = "",
-        str_end = "";
-    if(n !== n){return '参数错误!'}
-    if(n>9007199254740992){return '超出出范围!'}
-    str_begin = num < 0 ? ch_o.charAt(0) : ''
-    if(anum.length >= 2){
-        var xs = anum[1];
-        if(xs){
-            str_end = ch_o.charAt(1)
-            for(var x=0 ; x < xs.length ; x++){
-                str_end += ch.charAt(+xs.charAt(x))
+        //转换整数部分
+        
+        //一位整数 
+        if(_int.length == 1) return minus + ch.charAt(+_int) + dicimal;
+
+        //两位整数
+        if(m && _int.length == 2 && _int.charAt(0) === "1"){
+        //10的口语化处理
+            int = ch_u.charAt(1);
+            int += _int.charAt(1) == "0" ? "" : ch.charAt(+_int.charAt(1));
+        }else if(_int.length<=4){
+        //小于四位
+            for(var i=0,n=_int.length;n--;){
+                var _num = _int.charAt(i++);
+                int += ch.charAt(+_num) + (+_num && n?ch_u.charAt(n):'')
+            }
+        }else{
+        //大数递归
+            var d = _int.length/4>>0
+                ,y = _int.length%4
+                ,es = y || 4;
+            while (y==0 || !ch_u.charAt(3+d)){
+                y+=4;
+                d--;
+            }
+            int = toCL.call(this,_int.substr(0,y),m,ww,1) + ch_u.charAt(3+d) 
+                    + (~(_int.substr(y-1,2).indexOf("0"))?n0:'') 
+                    + toCL.call(this,_int.substr(y),false,ww,1)
+        }
+        //console.log(int);
+        int = int.replace(reg1,n0);
+        int = int.replace(reg,'');
+        if(!dg && _ww){
+            var dw_w = ch_u.charAt(4), dw_y = ch_u.charAt(5);
+            var lasty = int.lastIndexOf(dw_y);
+            if(~lasty){
+                int = int.substring(0,lasty).replace(new RegExp(dw_y,'g'),dw_w+dw_w) + int.substring(lasty);
+                
             }
         }
+        return minus + int + dicimal;
     }
-    if(!m){
-        if(n<10){
-            return str_begin + ch.charAt(n) + str_end;
+
+    function unCL(cnnumb){
+        var result = cnnumb.split(this.other.charAt(1));
+        var _int = result[0].replace(this.other.charAt(0),"")
+            ,_decimal = result[1]
+            ,_minus = !!~result[0].indexOf(this.other.charAt(0));
+        
+        var dw_w = this.ch_u.charAt(4), dw_y = this.ch_u.charAt(5);
+        _int = _int.replace(new RegExp(dw_w+"{2}","g"),dw_y);
+
+        var cnarr = _int.split('');
+        var rnum=0,num=0,_num=0,dw=0,maxdw=0;
+        var rnum_a=[],num_a=[],_num_a=[];
+        for(var i=0;i<cnarr.length;i++){
+            var chr = cnarr[i];
+            var n=0,u=0;
+            if(~(n = this.ch.indexOf(chr))){
+                //_num = _num*10 + n;
+                _num_a.unshift(n);
+            }else if(~(u = this.ch_u.indexOf(chr))){
+                if(dw>u){//正常情况
+                    // num += _num * (u == 5 ? Math.pow(10,8): Math.pow(10,u));
+                    // _num = 0; 
+                    unshift0(_num_a,(u == 5 ? 8: u));
+                    centerarr(num_a,_num_a);
+                }else if(u>=maxdw){//后跟大单位
+                    // if(i==0) _num = 1;
+                    // rnum += num + _num;
+                    // rnum *= u == 5 ? Math.pow(10,8): Math.pow(10,u);
+                    // num = 0;
+                    // _num = 0;
+                    maxdw = u;
+                    if(i==0) _num_a=[1];
+                    centerarr(rnum_a,num_a,_num_a);
+                    unshift0(rnum_a,(u == 5 ? 8: u));
+                }else{
+                    //num = (num + _num) * (u == 5 ? Math.pow(10,8): Math.pow(10,u));
+                    //_num = 0;
+                    dw = u;
+                    centerarr(num_a,_num_a);
+                    unshift0(num_a,(u == 5 ? 8: u));
+                }
+            }else{
+                //return cnnumb;
+            }
         }
-        if(n<20){
-            return str_begin + ch_u.charAt(1)+ch.charAt(+sn.charAt(1)).replace(reg,'') + str_end;
+        centerarr(rnum_a,num_a,_num_a).reverse();
+        var decimal = 0;
+        if(_decimal){
+            rnum_a.push('.')
+            decimal = '0.'
+            for(var i=0; i<_decimal.length; i++){
+                decimal+=this.ch.indexOf(_decimal.charAt(i));
+                rnum_a.push(this.ch.indexOf(_decimal.charAt(i)));
+            }
+            decimal = +decimal;
+
         }
+        rnum = (rnum + num + _num + decimal)*(_minus?-1:1);
+        //console.log(rnum_a.join(''));
+        //console.log(rnum);
+        return rnum_a.join('');
     }
-    if(sn.length==1){
-        return str_begin + ch.charAt(n) + str_end;
-    }else if(sn.length<=4){
-        var str = '';
-        for(var i=0,n=sn.length;n--;){
-            var _num = +sn.charAt(i);
-            str += this.toCL(sn.charAt(i),true) + (_num && n?ch_u.charAt(n):'')
-            i++;
+    var numtoCL = {langs:langs};
+    numtoCL.toS = function(num,m,ww){
+        return toCL.call(langs.s,num,(m == null ? true : m),ww);
+    }
+    numtoCL.toB = function(num,m,ww){
+        return toCL.call(langs.b,num,m,ww);
+    }
+    numtoCL.toMoney = function(num,lang){
+        lang = (typeof lang == 'object' && lang.m_u) ? lang : langs.b;
+        var result = regs.number.exec(num.toString());
+        if(!result && typeof num == "number"){
+            //return '超出出范围!'
+            return num;
+        }else if(!result){
+            //return '参数错误!'
+            return num;
         }
-        str = str.replace(reg1,n0);
-        str = str.replace(reg,'');
-        return str_begin + str + str_end;
-    }else{
-        var d = sn.length/4>>0
-            ,y = sn.length%4
-            ,str = ''
-            ,es = y || 4;
-        while (y==0 || !ch_u.charAt(3+d)){
-            y+=4;
-            d--;
+        var _num = result.slice(1,3).join('')
+            ,_decimal = result[4]; 
+        
+        var xs_str = _decimal ? '' : lang.m_z;
+        if(_decimal){
+            for(var i=0; i<lang.m_u.length-1;i++){
+                xs_str += _decimal.charAt(i) == 0 ? '' : toCL.call(lang,_decimal.charAt(i)) + lang.m_u.charAt(i+1);
+            }
         }
-        if(+sn.substr(0,y)){
-            str = this.toCL(sn.substr(0,y),m) + ch_u.charAt(3+d) + (sn.substr(y).charAt(0) == 0?n0:'') + this.toCL(sn.substr(y),true)
+        if(_num != "0" || xs_str == lang.m_z){
+            return lang.m_t + this.toB(_num) + lang.m_u.charAt(0) + xs_str;
         }else{
-            str = this.toCL(sn.substr(0,y),m) + this.toCL(sn.substr(y),true)
+            return lang.m_t + xs_str;
         }
-        str = str.replace(reg1,n0);
-        if(!m) {str = str.replace(reg,'')}
-        return str_begin + str + str_end;
     }
-}
+    numtoCL.unS = function(str){
+        return unCL.call(langs.s,str);
+    }
+    numtoCL.unB = function(str){
+        return unCL.call(langs.b,str);
+    }
+    return numtoCL;
+}));
