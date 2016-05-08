@@ -3,11 +3,13 @@
 1.小数点拆分计算 1
 2.代码简洁化 1
 3.亿亿转万万亿 1
+4.转金额规则规范化 参考 http://baike.baidu.com/link?url=lqGf7GrSnMPYvmrb4qMP_yS9k7aATfDidjsAC3eHv7Sxm76_hbamjuLaZH_g74n0Mr-a9CwIy6ekOIEK3Lt-G_
 
 待补充点
 1.中文数字转阿拉伯数字 1
-2.港台地区支持
-3.自定义转换
+2.港台地区支持 1
+3.自定义转换 1
+4.科学记数法字符串支持
  */
 (function (name, factory) {
     if (typeof define === 'function' && (define.amd || define.cmd)) {
@@ -18,7 +20,7 @@
     } else {
         throw new Error("加载 " + name + " 模块失败！，请检查您的环境！")
     }
-}('numtoCL', function () {
+}('nzh', function () {
     var langs = {
         s:{
             ch: '零一二三四五六七八九'
@@ -33,12 +35,12 @@
             ,m_z: '整'
             ,m_u: '元角分'
         },
-        hk_s:{
+        s_hk:{
             ch: '零一二三四五六七八九'
             ,ch_u: '個十百千萬億'
             ,other: '負點' 
         },
-        hk_b:{
+        b_hk:{
             ch: '零壹貳參肆伍陸柒捌玖'
             ,ch_u: '個拾佰仟萬億'
             ,other: '負點' 
@@ -144,7 +146,6 @@
         }
         return minus + int + dicimal;
     }
-
     function unCL(cnnumb){
         var result = cnnumb.split(this.other.charAt(1));
         var _int = result[0].replace(this.other.charAt(0),"")
@@ -157,6 +158,9 @@
         var cnarr = _int.split('');
         var rnum=0,num=0,_num=0,dw=0,maxdw=0;
         var rnum_a=[],num_a=[],_num_a=[];
+        function wei(u){
+            return u >= 5 ? (u-4)*4+4 : u;
+        }
         for(var i=0;i<cnarr.length;i++){
             var chr = cnarr[i];
             var n=0,u=0;
@@ -167,7 +171,7 @@
                 if(dw>u){//正常情况
                     // num += _num * (u == 5 ? Math.pow(10,8): Math.pow(10,u));
                     // _num = 0; 
-                    unshift0(_num_a,(u == 5 ? 8: u));
+                    unshift0(_num_a,wei(u));
                     centerarr(num_a,_num_a);
                 }else if(u>=maxdw){//后跟大单位
                     // if(i==0) _num = 1;
@@ -178,13 +182,13 @@
                     maxdw = u;
                     if(i==0) _num_a=[1];
                     centerarr(rnum_a,num_a,_num_a);
-                    unshift0(rnum_a,(u == 5 ? 8: u));
+                    unshift0(rnum_a,wei(u));
                 }else{
                     //num = (num + _num) * (u == 5 ? Math.pow(10,8): Math.pow(10,u));
                     //_num = 0;
                     dw = u;
                     centerarr(num_a,_num_a);
-                    unshift0(num_a,(u == 5 ? 8: u));
+                    unshift0(num_a,wei(u));
                 }
             }else{
                 //return cnnumb;
@@ -207,15 +211,8 @@
         //console.log(rnum);
         return rnum_a.join('');
     }
-    var numtoCL = {langs:langs};
-    numtoCL.toS = function(num,m,ww){
-        return toCL.call(langs.s,num,(m == null ? true : m),ww);
-    }
-    numtoCL.toB = function(num,m,ww){
-        return toCL.call(langs.b,num,m,ww);
-    }
-    numtoCL.toMoney = function(num,lang){
-        lang = (typeof lang == 'object' && lang.m_u) ? lang : langs.b;
+    function toMoney(num,ww){
+        //lang = (typeof lang == 'object' && lang.m_u) ? lang : langs.b;
         var result = regs.number.exec(num.toString());
         if(!result && typeof num == "number"){
             //return '超出出范围!'
@@ -227,23 +224,105 @@
         var _num = result.slice(1,3).join('')
             ,_decimal = result[4]; 
         
-        var xs_str = _decimal ? '' : lang.m_z;
+        var xs_str = _decimal ? '' : this.m_z;
         if(_decimal){
-            for(var i=0; i<lang.m_u.length-1;i++){
-                xs_str += _decimal.charAt(i) == 0 ? '' : toCL.call(lang,_decimal.charAt(i)) + lang.m_u.charAt(i+1);
+            for(var i=0; i<this.m_u.length-1;i++){
+                xs_str += _decimal.charAt(i) == 0 ? '' : toCL.call(this,_decimal.charAt(i)) + this.m_u.charAt(i+1);
             }
         }
-        if(_num != "0" || xs_str == lang.m_z){
-            return lang.m_t + this.toB(_num) + lang.m_u.charAt(0) + xs_str;
+        if(_num != "0" || xs_str == this.m_z || xs_str == ''){
+            return this.m_t + toCL.call(this,_num,null,ww) + this.m_u.charAt(0) + xs_str;
         }else{
-            return lang.m_t + xs_str;
+            return this.m_t + xs_str;
         }
     }
-    numtoCL.unS = function(str){
-        return unCL.call(langs.s,str);
+
+    var nzh = {
+        langs:langs
+        ,_y2ww:true
+    };
+
+    nzh.cn = {
+        encodeS: function(num,m,ww){
+            return toCL.call(langs.s,num,(m == null ? true : m),(ww == null ? nzh._y2ww : ww));
+        },
+        encodeB: function(num,m,ww){
+            return toCL.call(langs.b,num,m,(ww == null ? nzh._y2ww : ww));
+        },
+        decodeS: function(str){
+            return unCL.call(langs.s,str);
+        },
+        decodeB: function(str){
+            return unCL.call(langs.b,str);
+        },
+        toMoney: function(num,ww){
+            return toMoney.call(langs.b,num,(ww == null ? nzh._y2ww : ww));
+        }
+    };
+    nzh.hk = {
+        encodeS: function(num,m,ww){
+            return toCL.call(langs.s_hk,num,(m == null ? true : m),(ww == null ? nzh._y2ww : ww));
+        },
+        encodeB: function(num,m,ww){
+            return toCL.call(langs.b_hk,num,m,(ww == null ? nzh._y2ww : ww));
+        },
+        decodeS: function(str){
+            return unCL.call(langs.s_hk,str);
+        },
+        decodeB: function(str){
+            return unCL.call(langs.b_hk,str);
+        },
+        toMoney: function(num,ww){
+            return toMoney.call(langs.b_hk,num,(ww == null ? nzh._y2ww : ww));
+        }
+    };
+    //简体中文
+    // nzh.toS = 
+    // nzh.encodeS = function(num,m,ww){
+    //     return toCL.call(langs.s,num,(m == null ? true : m),ww);
+    // }
+    // nzh.toB = 
+    // nzh.encodeB = function(num,m,ww){
+    //     return toCL.call(langs.b,num,m,ww);
+    // }
+    // nzh.toMoney = function(num){
+    //     return toMoney.call(langs.b,num);
+    // }
+    // nzh.unS = 
+    // nzh.decodeS = function(str){
+    //     return unCL.call(langs.s,str);
+    // }
+    // nzh.unB = 
+    // nzh.decodeB = function(str){
+    //     return unCL.call(langs.b,str);
+    // }
+
+    // //繁体中文
+    // nzh.encodeS_hk = function(num,m,ww){
+    //     return toCL.call(langs.s_hk,num,(m == null ? true : m),ww);
+    // }
+    // nzh.encodeB_hk = function(num,m,ww){
+    //     return toCL.call(langs.b_hk,num,m,ww);
+    // }
+    // nzh.toMoney_hk = function(num){
+    //     return toMoney.call(langs.b_hk,num);
+    // }
+    // nzh.decodeS_hk = function(str){
+    //     return unCL.call(langs.s_hk,str);
+    // }
+    // nzh.decodeB_hk = function(str){
+    //     return unCL.call(langs.b_hk,str);
+    // }
+
+    //自定义
+    nzh.Custom = Custom;
+    function Custom(lang){
+        this.lang = lang;
     }
-    numtoCL.unB = function(str){
-        return unCL.call(langs.b,str);
+    Custom.prototype = {
+        encode:function(){return toCL.apply(this.lang,arguments)}
+        ,decode:function(){return unCL.apply(this.lang,arguments)}
+        ,toMoney:function(){return toMoney.apply(this.lang,arguments)}
     }
-    return numtoCL;
+    return nzh;
 }));

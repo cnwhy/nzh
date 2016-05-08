@@ -1,26 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 	<meta charset="UTF-8">
 	<title>数字转中文</title>
-	<script src="../numtoCL.js"></script>
+	<script src="../nzh.js"></script>
+</head>
+<body>
+	<input id="n" type="text" onkeyup="show(this.value)" value="1023456789.123" />
+	<button onclick="show($('n').value)">计算</button>
+	<br />结果：<br />
+	<textarea id="n1" cols="100" rows="15"></textarea>
 	<script>
 		$ = function(){
 			return document.getElementById.apply(document,arguments);
 		}
+
+		var custom = new nzh.Custom({
+			ch: '〇壹贰叁肆伍陆柒捌玖'
+			,ch_u: '个拾佰仟万亿兆京'
+			,other: '负点'
+			,m_t: '￥'
+			,m_z: '正'
+			,m_u: '元角分厘'
+		});
+
+
 		function show(n){
 			var str = '';
-			str += numtoCL.toS(n) + '\n';
-			str += numtoCL.toB(n) + '\n';
-			str += numtoCL.toMoney(n) + '\n';
+			str += '>>>CN<<< \n';
+			str += nzh.cn.encodeS(n) + '\n';
+			str += nzh.cn.encodeB(n) + '\n';
+			str += nzh.cn.toMoney(n) + '\n';
+			str += '\n';
+			str += '>>>HK<<< \n';
+			str += nzh.hk.encodeS(n) + '\n';
+			str += nzh.hk.encodeB(n) + '\n';
+			str += nzh.hk.toMoney(n) + '\n';
+			str += '\n';
+			str += '>>>CUSTOM<<< \n';
+			str += custom.encode(n) + '\n';
+			str += custom.toMoney(n) + '\n';
 			$('n1').value = str;
 		}
+
+		show($('n').value);
 	</script>
-</head>
-<body>
-	<input id="n" type="text" onkeyup="show(this.value)" />
-	<button onclick="show($('n').value)">计算</button>
-	<br />结果：<br />
-	<textarea id="n1" cols="100" rows="3"></textarea>
 </body>
 </html>

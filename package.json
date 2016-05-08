@@ -1,0 +1,25 @@
+{
+  "name": "nzh",
+  "version": "0.0.1",
+  "description": "数字转中文,大写,金额",
+  "main": "nzh.js",
+  "files": [
+    "nzh.js"
+  ],
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cnwhy/nzh.git"
+  },
+  "keywords": [
+    "数字转中文",
+    "数字转金额",
+    "中文数字转阿拉伯数字",
+    "中文数字"
+  ],
+  "author": {
+    "name": "cnwhy",
+    "email": "w.why@163.com"
+  },
+  "license": "BSD"
+}
