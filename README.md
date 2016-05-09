@@ -3,6 +3,13 @@ nzh
 
 nzh适用于开发过程中需要将数字转换为中文的场景。  
 
+## install
+```
+npm install nzh
+bower install nzh
+```
+
+
 ## demo  
 ```
 var nzhcn = nzh.cn;   //使用简体中文,另外有nzh.hk -- 繁体中文  
