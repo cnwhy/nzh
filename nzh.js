@@ -79,7 +79,6 @@
             //return '参数错误!'
             return num;
         }
-        var _ww = ww == null ? true : ww;
         var ch = this.ch
             ,ch_u = this.ch_u
             ,ch_o = this.other
@@ -136,7 +135,7 @@
         //console.log(int);
         int = int.replace(reg1,n0);
         int = int.replace(reg,'');
-        if(!dg && _ww){
+        if(!dg && _ww && ch_u.length>5){
             var dw_w = ch_u.charAt(4), dw_y = ch_u.charAt(5);
             var lasty = int.lastIndexOf(dw_y);
             if(~lasty){
