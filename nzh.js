@@ -20,7 +20,7 @@
     } else {
         throw new Error("加载 " + name + " 模块失败！，请检查您的环境！")
     }
-}('nzh', function () {
+}('Nzh', function () {
     var langs = {
         s:{
             ch: '零一二三四五六七八九'
@@ -266,17 +266,22 @@
         }
     }
 
-    var nzh = {
-        langs:langs
-        ,_y2ww:true
+    var Nzh = function(lang){
+        this.lang = lang;
     };
-
-    nzh.cn = {
+    Nzh.prototype = {
+        encode:function(){return toCL.apply(this.lang,arguments)}
+        ,decode:function(){return unCL.apply(this.lang,arguments)}
+        ,toMoney:function(){return toMoney.apply(this.lang,arguments)}
+    }
+    Nzh.langs = langs;
+    Nzh._y2ww = true; //默认启用 "万万"
+    Nzh.cn = {
         encodeS: function(num,m,ww){
-            return toCL.call(langs.s,num,(m == null ? true : m),(ww == null ? nzh._y2ww : ww));
+            return toCL.call(langs.s,num,(m == null ? true : m),(ww == null ? Nzh._y2ww : ww));
         },
         encodeB: function(num,m,ww){
-            return toCL.call(langs.b,num,m,(ww == null ? nzh._y2ww : ww));
+            return toCL.call(langs.b,num,m,(ww == null ? Nzh._y2ww : ww));
         },
         decodeS: function(str){
             return unCL.call(langs.s,str);
@@ -285,15 +290,15 @@
             return unCL.call(langs.b,str);
         },
         toMoney: function(num,ww){
-            return toMoney.call(langs.b,num,(ww == null ? nzh._y2ww : ww));
+            return toMoney.call(langs.b,num,(ww == null ? Nzh._y2ww : ww));
         }
     };
-    nzh.hk = {
+    Nzh.hk = {
         encodeS: function(num,m,ww){
-            return toCL.call(langs.s_hk,num,(m == null ? true : m),(ww == null ? nzh._y2ww : ww));
+            return toCL.call(langs.s_hk,num,(m == null ? true : m),(ww == null ? Nzh._y2ww : ww));
         },
         encodeB: function(num,m,ww){
-            return toCL.call(langs.b_hk,num,m,(ww == null ? nzh._y2ww : ww));
+            return toCL.call(langs.b_hk,num,m,(ww == null ? Nzh._y2ww : ww));
         },
         decodeS: function(str){
             return unCL.call(langs.s_hk,str);
@@ -302,7 +307,7 @@
             return unCL.call(langs.b_hk,str);
         },
         toMoney: function(num,ww){
-            return toMoney.call(langs.b_hk,num,(ww == null ? nzh._y2ww : ww));
+            return toMoney.call(langs.b_hk,num,(ww == null ? Nzh._y2ww : ww));
         }
     };
     //简体中文
@@ -342,16 +347,5 @@
     // nzh.decodeB_hk = function(str){
     //     return unCL.call(langs.b_hk,str);
     // }
-
-    //自定义
-    nzh.Custom = Custom;
-    function Custom(lang){
-        this.lang = lang;
-    }
-    Custom.prototype = {
-        encode:function(){return toCL.apply(this.lang,arguments)}
-        ,decode:function(){return unCL.apply(this.lang,arguments)}
-        ,toMoney:function(){return toMoney.apply(this.lang,arguments)}
-    }
-    return nzh;
+    return Nzh;
 }));

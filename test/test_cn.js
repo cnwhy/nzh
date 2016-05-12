@@ -11,10 +11,10 @@
 		]
 		for(var i=0; i<narr.length; i++){
 			var n = narr[i];
-			assert.equal(nzh.cn.encodeS(n[0]),n[1],"(" + n[0] + ") encodeS");
-			assert.equal(nzh.cn.encodeB(n[0]),n[2],"(" + n[0] + ") encodeB");
-			assert.equal(nzh.cn.decodeS(n[1]),n[0],"(" + n[1] + ") decodeS");
-			assert.equal(nzh.cn.decodeB(n[2]),n[0],"(" + n[2] + ") decodeB");
+			assert.equal(Nzh.cn.encodeS(n[0]),n[1],"(" + n[0] + ") encodeS");
+			assert.equal(Nzh.cn.encodeB(n[0]),n[2],"(" + n[0] + ") encodeB");
+			assert.equal(Nzh.cn.decodeS(n[1]),n[0],"(" + n[1] + ") decodeS");
+			assert.equal(Nzh.cn.decodeB(n[2]),n[0],"(" + n[2] + ") decodeB");
 		}
 	});
 	QUnit.test("带小数的转换", function( assert ) {
@@ -27,10 +27,10 @@
 		]
 		for(var i=0; i<narr.length; i++){
 			var n = narr[i];
-			assert.equal(nzh.cn.encodeS(n[0]) , n[1],n[0] + " encodeS");
-			assert.equal(nzh.cn.encodeB(n[0]) , n[2],n[0] + " encodeB");
-			assert.equal(nzh.cn.decodeS(n[1]) , n[0],n[0] + " decodeS");
-			assert.equal(nzh.cn.decodeB(n[2]) , n[0],n[0] + " decodeB");
+			assert.equal(Nzh.cn.encodeS(n[0]) , n[1],n[0] + " encodeS");
+			assert.equal(Nzh.cn.encodeB(n[0]) , n[2],n[0] + " encodeB");
+			assert.equal(Nzh.cn.decodeS(n[1]) , n[0],n[0] + " decodeS");
+			assert.equal(Nzh.cn.decodeB(n[2]) , n[0],n[0] + " decodeB");
 		}
 	});
 	QUnit.test("十的口语化测试", function( assert ) {
@@ -41,18 +41,18 @@
 		]
 		for(var i=0; i<narr.length; i++){
 			var n = narr[i];
-			assert.equal(nzh.cn.encodeS(n[0])       , n[2],n[0] + " encodeS");
-			assert.equal(nzh.cn.encodeS(n[0],true)  , n[2],n[0] + " encodeS");
-			assert.equal(nzh.cn.encodeS(n[0],false) , n[1],n[0] + " encodeS");
+			assert.equal(Nzh.cn.encodeS(n[0])       , n[2],n[0] + " encodeS");
+			assert.equal(Nzh.cn.encodeS(n[0],true)  , n[2],n[0] + " encodeS");
+			assert.equal(Nzh.cn.encodeS(n[0],false) , n[1],n[0] + " encodeS");
 			
-			assert.equal(nzh.cn.encodeB(n[0])       , n[3],n[0] + " encodeB");
-			assert.equal(nzh.cn.encodeB(n[0],true)  , n[4],n[0] + " encodeB");
-			assert.equal(nzh.cn.encodeB(n[0],false) , n[3],n[0] + " encodeB");
+			assert.equal(Nzh.cn.encodeB(n[0])       , n[3],n[0] + " encodeB");
+			assert.equal(Nzh.cn.encodeB(n[0],true)  , n[4],n[0] + " encodeB");
+			assert.equal(Nzh.cn.encodeB(n[0],false) , n[3],n[0] + " encodeB");
 
-			assert.equal(nzh.cn.decodeS(n[1])       , n[0],n[1] + " decodeS");
-			assert.equal(nzh.cn.decodeS(n[2])       , n[0],n[2] + " decodeS");
-			assert.equal(nzh.cn.decodeB(n[3])       , n[0],n[3] + " decodeB");
-			assert.equal(nzh.cn.decodeB(n[4])       , n[0],n[4] + " decodeB");
+			assert.equal(Nzh.cn.decodeS(n[1])       , n[0],n[1] + " decodeS");
+			assert.equal(Nzh.cn.decodeS(n[2])       , n[0],n[2] + " decodeS");
+			assert.equal(Nzh.cn.decodeB(n[3])       , n[0],n[3] + " decodeB");
+			assert.equal(Nzh.cn.decodeB(n[4])       , n[0],n[4] + " decodeB");
 		}
 	});
 	QUnit.test("超级大数(万万亿级别)'万万'化及不'万万'化", function( assert ) {
@@ -62,11 +62,11 @@
 		]
 		for(var i=0; i<narr.length; i++){
 			var n = narr[i];
-			assert.equal(nzh.cn.encodeB(n[0])       , n[1],n[0] + " encodeB");
-			assert.equal(nzh.cn.encodeB(n[0],null,false)  , n[2],n[0] + " encodeB");
+			assert.equal(Nzh.cn.encodeB(n[0])       , n[1],n[0] + " encodeB");
+			assert.equal(Nzh.cn.encodeB(n[0],null,false)  , n[2],n[0] + " encodeB");
 
-			assert.equal(nzh.cn.decodeB(n[1])       , n[0],n[1] + " decodeB");
-			assert.equal(nzh.cn.decodeB(n[2])       , n[0],n[2] + " decodeB");
+			assert.equal(Nzh.cn.decodeB(n[1])       , n[0],n[1] + " decodeB");
+			assert.equal(Nzh.cn.decodeB(n[2])       , n[0],n[2] + " decodeB");
 		}
 	});
 	QUnit.test("金额转换", function( assert ) {
@@ -80,7 +80,7 @@
 		]
 		for(var i=0; i<narr.length; i++){
 			var n = narr[i];
-			assert.equal(nzh.cn.toMoney(n[0]) , n[1] , n[2]);
+			assert.equal(Nzh.cn.toMoney(n[0]) , n[1] , n[2]);
 		}
 	});
 
