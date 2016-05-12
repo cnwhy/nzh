@@ -70,6 +70,32 @@
         }
         return barr;
     }
+
+    function zero_comm(str,char_0,type){
+        str = str.split("");
+        if(!type || type=="$"){
+            for(var i=str.length;i--;){
+                if(str[i] == char_0){
+                    str[i]=""
+                }else{
+                    break;
+                }
+            }
+        }
+        if(!type || type=="nto1"){
+            var mark = false;
+            for(var i=0;i<str.length;i++){
+                if(str[i] == char_0){
+                    if(mark) str[i] = "";
+                    mark = true;                
+                }else{
+                    mark = false;
+                }
+            }
+        }
+        return str.join('');
+    }
+
     function toCL(num,m,ww,dg){
         var result = regs.number.exec(num.toString());
         if(!result && typeof num == "number"){
@@ -79,6 +105,7 @@
             //return '参数错误!'
             return num;
         }
+        //var _ww = ww == null ? true : ww;
         var ch = this.ch
             ,ch_u = this.ch_u
             ,ch_o = this.other
@@ -133,9 +160,12 @@
                     + toCL.call(this,_int.substr(y),false,ww,1)
         }
         //console.log(int);
-        int = int.replace(reg1,n0);
-        int = int.replace(reg,'');
-        if(!dg && _ww && ch_u.length>5){
+        //int = int.replace(reg1,n0).replace(reg,'');
+        int = zero_comm(int,n0);
+        
+
+        // int = zero_comm(int,n0,'$');
+        if(!dg && ww && ch_u.length>5){
             var dw_w = ch_u.charAt(4), dw_y = ch_u.charAt(5);
             var lasty = int.lastIndexOf(dw_y);
             if(~lasty){
