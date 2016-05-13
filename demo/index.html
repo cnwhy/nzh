@@ -15,7 +15,7 @@
 			return document.getElementById.apply(document,arguments);
 		}
 
-		var custom = new nzh.Custom({
+		var custom = new Nzh({
 			ch: '〇壹贰叁肆伍陆柒捌玖'
 			,ch_u: '个拾佰仟万亿兆京'
 			,other: '负点'
@@ -28,14 +28,14 @@
 		function show(n){
 			var str = '';
 			str += '>>>CN<<< \n';
-			str += nzh.cn.encodeS(n) + '\n';
-			str += nzh.cn.encodeB(n) + '\n';
-			str += nzh.cn.toMoney(n) + '\n';
+			str += Nzh.cn.encodeS(n) + '\n';
+			str += Nzh.cn.encodeB(n) + '\n';
+			str += Nzh.cn.toMoney(n) + '\n';
 			str += '\n';
 			str += '>>>HK<<< \n';
-			str += nzh.hk.encodeS(n) + '\n';
-			str += nzh.hk.encodeB(n) + '\n';
-			str += nzh.hk.toMoney(n) + '\n';
+			str += Nzh.hk.encodeS(n) + '\n';
+			str += Nzh.hk.encodeB(n) + '\n';
+			str += Nzh.hk.toMoney(n) + '\n';
 			str += '\n';
 			str += '>>>CUSTOM<<< \n';
 			str += custom.encode(n) + '\n';
