@@ -6,7 +6,9 @@
   "files": [
     "nzh.js"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha test/test_node.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cnwhy/nzh.git"
@@ -21,5 +23,9 @@
     "name": "cnwhy",
     "email": "w.why@163.com"
   },
-  "license": "BSD"
+  "license": "BSD",
+  "devDependencies": {
+    "mocha": "^3.0.2",
+    "should": "^11.1.0"
+  }
 }

@@ -12,7 +12,9 @@
 4.科学记数法字符串支持
  */
 (function (name, factory) {
-    if (typeof define === 'function' && (define.amd || define.cmd)) {
+    if (typeof process === "object" && typeof module === "object" && typeof module.exports) {
+        module.exports = factory();
+    } else if (typeof define === 'function' && (define.amd || define.cmd)) {
         define([], factory);
     } else if (typeof window !== "undefined" || typeof self !== "undefined") {
         var global = typeof window !== "undefined" ? window : self;
