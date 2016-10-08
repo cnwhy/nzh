@@ -1,15 +1,6 @@
 /* 
 待优化点
-1.小数点拆分计算 1
-2.代码简洁化 1
-3.亿亿转万万亿 1
-4.转金额规则规范化 参考 http://baike.baidu.com/link?url=lqGf7GrSnMPYvmrb4qMP_yS9k7aATfDidjsAC3eHv7Sxm76_hbamjuLaZH_g74n0Mr-a9CwIy6ekOIEK3Lt-G_
-
-待补充点
-1.中文数字转阿拉伯数字 1
-2.港台地区支持 1
-3.自定义转换 1
-4.科学记数法字符串支持 1
+转金额规则规范化 参考 http://baike.baidu.com/link?url=lqGf7GrSnMPYvmrb4qMP_yS9k7aATfDidjsAC3eHv7Sxm76_hbamjuLaZH_g74n0Mr-a9CwIy6ekOIEK3Lt-G_
  */
 (function (name, factory) {
     if (typeof process === "object" && typeof module === "object" && typeof module.exports) {
@@ -202,7 +193,6 @@
         //console.log(int);
         //int = int.replace(reg1,n0).replace(reg,'');
         int = zero_comm(int,n0);
-        
 
         // int = zero_comm(int,n0,'$');
         if(!dg && ww && ch_u.length>5){
@@ -238,23 +228,14 @@
                 _num_a.unshift(n);
             }else if(~(u = this.ch_u.indexOf(chr))){
                 if(dw>u){//正常情况
-                    // num += _num * (u == 5 ? Math.pow(10,8): Math.pow(10,u));
-                    // _num = 0; 
                     unshift0(_num_a,wei(u));
                     centerarr(num_a,_num_a);
                 }else if(u>=maxdw){//后跟大单位
-                    // if(i==0) _num = 1;
-                    // rnum += num + _num;
-                    // rnum *= u == 5 ? Math.pow(10,8): Math.pow(10,u);
-                    // num = 0;
-                    // _num = 0;
                     maxdw = u;
                     if(i==0) _num_a=[1];
                     centerarr(rnum_a,num_a,_num_a);
                     unshift0(rnum_a,wei(u));
                 }else{
-                    //num = (num + _num) * (u == 5 ? Math.pow(10,8): Math.pow(10,u));
-                    //_num = 0;
                     dw = u;
                     centerarr(num_a,_num_a);
                     unshift0(num_a,wei(u));
@@ -276,8 +257,6 @@
 
         }
         rnum = (rnum + num + _num + decimal)*(_minus?-1:1);
-        //console.log(rnum_a.join(''));
-        //console.log(rnum);
         return rnum_a.join('');
     }
     function toMoney(num,ww){
@@ -301,7 +280,25 @@
             return this.m_t + xs_str;
         }
     }
-
+    function getNzhObjByLang(lang_s,lang_b){
+        return {
+            encodeS: function(num,m,ww){
+                return toCL.call(lang_s,num,(m == null ? true : m),(ww == null ? Nzh._y2ww : ww));
+            },
+            encodeB: function(num,m,ww){
+                return toCL.call(lang_b,num,m,(ww == null ? Nzh._y2ww : ww));
+            },
+            decodeS: function(str){
+                return unCL.call(lang_s,str);
+            },
+            decodeB: function(str){
+                return unCL.call(lang_b,str);
+            },
+            toMoney: function(num,ww){
+                return toMoney.call(lang_b,num,(ww == null ? Nzh._y2ww : ww));
+            }
+        }
+    }
 
     var Nzh = function(lang){
         this.lang = lang;
@@ -313,39 +310,8 @@
     }
     Nzh.langs = langs;
     Nzh._y2ww = true; //默认启用 "万万"
-    Nzh.cn = {
-        encodeS: function(num,m,ww){
-            return toCL.call(langs.s,num,(m == null ? true : m),(ww == null ? Nzh._y2ww : ww));
-        },
-        encodeB: function(num,m,ww){
-            return toCL.call(langs.b,num,m,(ww == null ? Nzh._y2ww : ww));
-        },
-        decodeS: function(str){
-            return unCL.call(langs.s,str);
-        },
-        decodeB: function(str){
-            return unCL.call(langs.b,str);
-        },
-        toMoney: function(num,ww){
-            return toMoney.call(langs.b,num,(ww == null ? Nzh._y2ww : ww));
-        }
-    };
-    Nzh.hk = {
-        encodeS: function(num,m,ww){
-            return toCL.call(langs.s_hk,num,(m == null ? true : m),(ww == null ? Nzh._y2ww : ww));
-        },
-        encodeB: function(num,m,ww){
-            return toCL.call(langs.b_hk,num,m,(ww == null ? Nzh._y2ww : ww));
-        },
-        decodeS: function(str){
-            return unCL.call(langs.s_hk,str);
-        },
-        decodeB: function(str){
-            return unCL.call(langs.b_hk,str);
-        },
-        toMoney: function(num,ww){
-            return toMoney.call(langs.b_hk,num,(ww == null ? Nzh._y2ww : ww));
-        }
-    };
+    Nzh.cn = getNzhObjByLang(langs.s,langs.b);
+    Nzh.hk = getNzhObjByLang(langs.s_hk,langs.b_hk);
+
     return Nzh;
 }));
