@@ -33,6 +33,18 @@
 			assert.equal(Nzh.cn.decodeB(n[2]) , n[0],n[0] + " decodeB");
 		}
 	});
+	QUnit.test("科学记数法", function( assert ) {
+		var narr=[
+			['100e-3',"零点一","幂为负数"]
+			,['1.01e+3',"一千零一十","幂为正数"]
+			,['1.01e3',"一千零一十","幂无符号,默认正数"]
+			,['1.01E3',"一千零一十","'e'大小写不敏感"]
+		]
+		for(var i=0; i<narr.length; i++){
+			var n = narr[i];
+			assert.equal(Nzh.cn.encodeS(n[0]) , n[1] , n[2]);
+		}
+	});
 	QUnit.test("十的口语化测试", function( assert ) {
 		var narr=[
 			[10,"一十","十","壹拾","拾"]

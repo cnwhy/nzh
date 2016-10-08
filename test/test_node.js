@@ -51,7 +51,18 @@ describe("test for node.js", function() {
             Nzh.cn.decodeB(n[2]).should.equal(n[0].toString());
         }
     });
-
+    it("科学记数法", function() {
+        const arr=[
+            ['100e-3',"零点一","幂为负数"]
+            ,['1.01e+3',"一千零一十","幂为正数"]
+            ,['1.01e3',"一千零一十","幂无符号,默认正数"]
+            ,['1.01E3',"一千零一十","'e'大小写不敏感"]
+        ]
+        for(var i=0; i<arr.length; i++){
+            var n = arr[i];
+            Nzh.cn.encodeS(n[0]).should.equal(n[1]);
+        }
+    });
     it("十的口语化测试", function() {
         const arr = [
             [ 10, "一十", "十", "壹拾", "拾" ],
