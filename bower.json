@@ -1,6 +1,6 @@
 {
   "name": "nzh",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "数字转中文,大写,金额",
   "main": "nzh.js",
   "homepage": "https://github.com/cnwhy/numtoCL",
