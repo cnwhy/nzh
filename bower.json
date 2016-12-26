@@ -5,7 +5,7 @@
   "main": "nzh.js",
   "homepage": "https://github.com/cnwhy/numtoCL",
   "authors": [
-    "cnwhy"
+    "cnwhy <w.why@163.com>"
   ],
   "keywords": [
     "数字转中文",
@@ -13,7 +13,7 @@
     "中文数字转阿拉伯数字",
     "中文数字"
   ],
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "ignore": [
     "**/.*",
     "index.html",

@@ -23,7 +23,7 @@
     "name": "cnwhy",
     "email": "w.why@163.com"
   },
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "devDependencies": {
     "mocha": "^3.0.2",
     "should": "^11.1.0"
