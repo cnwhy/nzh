@@ -8,11 +8,11 @@
 
 require("should");
 
-const Nzh = require("../nzh");
+var Nzh = require("../nzh");
 
 describe("test for node.js", function() {
     it("常规整数，小于亿亿（万万亿）位", function() {
-        const arr = [
+        var arr = [
             [ 0, "零", "零" ],
             [ 1, "一", "壹" ],
             [ 10, "十", "壹拾" ],
@@ -26,8 +26,8 @@ describe("test for node.js", function() {
                 "壹仟零壹拾万零壹仟零壹拾亿零壹仟零壹拾万零壹仟零壹拾"
             ]
         ];
-        for(let i = 0; i < arr.length; i++) {
-            const n = arr[i];
+        for(var i = 0; i < arr.length; i++) {
+            var n = arr[i];
             Nzh.cn.encodeS(n[0]).should.equal(n[1]);
             Nzh.cn.encodeB(n[0]).should.equal(n[2]);
             Nzh.cn.decodeS(n[1]).should.equal(n[0].toString());
@@ -36,14 +36,14 @@ describe("test for node.js", function() {
     });
 
     it("带小数的转换", function() {
-        const arr = [
+        var arr = [
             [ 0.1, "零点一", "零点壹" ],
             [ 1.1, "一点一", "壹点壹" ],
             [ 10.01, "十点零一", "壹拾点零壹" ],
             [ 12.10, "十二点一", "壹拾贰点壹" ],
             [ "100111.11", "十万零一百一十一点一一", "壹拾万零壹佰壹拾壹点壹壹" ]
         ];
-        for(let i = 0; i < arr.length; i++) {
+        for(var i = 0; i < arr.length; i++) {
             var n = arr[i];
             Nzh.cn.encodeS(n[0]).should.equal(n[1]);
             Nzh.cn.encodeB(n[0]).should.equal(n[2]);
@@ -52,7 +52,7 @@ describe("test for node.js", function() {
         }
     });
     it("科学记数法", function() {
-        const arr=[
+        var arr=[
             ['100e-3',"零点一","幂为负数"]
             ,['1.01e+3',"一千零一十","幂为正数"]
             ,['1.01e3',"一千零一十","幂无符号,默认正数"]
@@ -64,13 +64,13 @@ describe("test for node.js", function() {
         }
     });
     it("十的口语化测试", function() {
-        const arr = [
+        var arr = [
             [ 10, "一十", "十", "壹拾", "拾" ],
             [ 100000, "一十万", "十万", "壹拾万", "拾万" ],
             [ 1000100000, "一十亿零一十万", "十亿零一十万", "壹拾亿零壹拾万", "拾亿零壹拾万" ]
         ];
-        for(let i = 0; i < arr.length; i++) {
-            const n = arr[i];
+        for(var i = 0; i < arr.length; i++) {
+            var n = arr[i];
             Nzh.cn.encodeS(n[0]).should.equal(n[2]);
             Nzh.cn.encodeS(n[0], true).should.equal(n[2]);
             Nzh.cn.encodeS(n[0], false).should.equal(n[1]);
@@ -87,12 +87,12 @@ describe("test for node.js", function() {
     });
 
     it("超级大数（万万亿级别），万万化及非万万化", function() {
-        const arr = [
+        var arr = [
             [ 1e16, "壹万万亿", "壹亿亿" ],
             [ 10.011e16, "壹拾万万零壹佰壹拾万亿", "壹拾亿零壹佰壹拾万亿" ]
         ];
-        for(let i = 0; i < arr.length; i++) {
-            const n = arr[i];
+        for(var i = 0; i < arr.length; i++) {
+            var n = arr[i];
             Nzh.cn.encodeB(n[0]).should.equal(n[1]);
             Nzh.cn.encodeB(n[0], null, false).should.equal(n[2]);
 
