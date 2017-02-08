@@ -51,15 +51,12 @@
         if(n == null) n=1; 
         for(;n--;) arr.unshift(0);
     }
-    function centerarr(barr,sarr){
-        for(var i=0;i<sarr.length;i++){
-            barr.splice(i,1,sarr[i]);
-        }
-        sarr.splice(0,sarr.length);
-        if(arguments.length > 2){
-            var r = [].slice.call(arguments,2);
+    function centerarr(barr, sarr /*[, array2[, ...[, arrayN]]]*/) {
+        barr.splice.apply(barr,[0,sarr.length].concat(sarr.splice(0, sarr.length)));
+        if (arguments.length > 2) {
+            var r = [].slice.call(arguments, 2);
             r.unshift(barr);
-            centerarr.apply(null,r);
+            centerarr.apply(null, r);
         }
         return barr;
     }
@@ -70,28 +67,21 @@
         var zs = result[2]
             ,xs = result[4] || ""
             ,e = result[5] ? +result[5] : 0;
-        // zs,xs,e
-        var zs_a = zs.split("");
-        var xs_a = xs.split("");
         if(e > 0){
-            if(xs_a.length<=e){
-                xs_a.push((new Array(e-xs_a.length+1)).join("0"));
-                zs_a = zs_a.concat(xs_a);
-                xs_a = [];
-            }else{
-                zs_a = zs_a.concat(xs_a.splice(0,e));
-            }
+            var _zs = xs.substr(0,e);
+            _zs = _zs.length < e ? _zs + new Array(e-_zs.length+1).join("0"):_zs;
+            xs = xs.substr(e);
+            zs += _zs;
         }else{
-            if(zs_a.length <= -e){
-                zs_a.unshift((new Array(-e-zs_a.length+1)).join("0"));
-                xs_a = zs_a.concat(xs_a);
-                zs_a = [];
-            }else{
-                xs_a = zs_a.splice(zs_a.length+e).concat(xs_a);
-            }
+            e = -e;
+            var s_start = zs.length - e;
+            s_start = s_start < 0 ? 0 : s_start;
+            var _xs = zs.substr(s_start,e);
+            _xs = _xs.length < e ? new Array(e-_xs.length+1).join("0") + _xs : _xs;
+            zs = zs.substring(0,s_start);
+            xs = _xs + xs;
         }
-        zs = zs_a.length ? zs_a.join("") : "0";
-        xs = xs_a.length ? xs_a.join("") : "";
+        zs = zs == "" ? "0" : zs;
         return (result[1] == "-" ? "-": "") + zs + (xs ? "." + xs : "");
     }
     function zero_comm(str,char_0,type){
@@ -141,10 +131,6 @@
             ,ch_u = this.ch_u
             ,ch_o = this.other
             ,n0 = ch.charAt(0)
-            ,reg = new RegExp(n0+"*$")
-            ,reg1 = new RegExp(n0+"+",'g')
-            ,reg2 = new RegExp("0*$")
-            //,reg3 = new RegExp(ch_u.charAt(5)+'{2}')
         var _int = result.int
             ,_decimal = result.decimal
             ,_minus = result.minus;
@@ -154,7 +140,7 @@
         
         //转换小数部分
         if(_decimal){
-            _decimal = _decimal.replace(reg2,""); //去除尾部0
+            _decimal = zero_comm(_decimal,"0","$"); //去除尾部0
             for(var x=0 ; x < _decimal.length ; x++){
                 dicimal += ch.charAt(+_decimal.charAt(x));
             }
@@ -190,11 +176,10 @@
                     + (~(_int.substr(y-1,2).indexOf("0"))?n0:'') 
                     + toCL.call(this,_int.substr(y),false,ww,1)
         }
-        //console.log(int);
-        //int = int.replace(reg1,n0).replace(reg,'');
+        
+        //清理多余的‘零’
         int = zero_comm(int,n0);
 
-        // int = zero_comm(int,n0,'$');
         if(!dg && ww && ch_u.length>5){
             var dw_w = ch_u.charAt(4), dw_y = ch_u.charAt(5);
             var lasty = int.lastIndexOf(dw_y);

@@ -1,5 +1,5 @@
 QUnit.test("自定义", function( assert ) {
-	var custom = window.custom = new Nzh({
+	var custom = new Nzh({
 			ch: '零壹贰叁肆伍陆柒捌玖'
 			,ch_u: '个拾佰仟万亿兆京'
 			,other: '负点'
