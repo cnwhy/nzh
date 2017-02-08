@@ -33,7 +33,7 @@ nzhcn.toMoney("100111.11");         // 转中文金额 >> 人民币壹拾万零�
 ```javascript
 // 小写默认启用
 nzhcn.encodeS(13.5);                // 十三点五
-nzhcn.encodeS(13.5, fasle);         // 一十三点五
+nzhcn.encodeS(13.5, false);         // 一十三点五
 
 // 大写默人关闭
 nzhcn.encodeB(13.5);                // 壹拾叁點伍
