@@ -31,22 +31,64 @@ function zero_comm(str, char_0, type) {
     return str.join('');
 }
 
-function toCL(num, m, ww, dg) {
+/**
+ * 阿拉伯数字转中文数字
+ * 
+ * @param {String} num 阿拉伯数字/字符串 , 科学记数法字符串
+ * @param {Object} opration 转换配置 万万(ww)化单位 十的口语化(tenMin)等
+ * @returns String
+ */
+function CL(num, options) {
     var result = tool.getNumbResult(num)
     if (!result) {
         return num;
     }
-    var ch = this.ch
-        , ch_u = this.ch_u
-        , ch_o = this.other
-        , n0 = ch.charAt(0)
-
-    var _int = result.int
-        , _decimal = result.decimal
-        , _minus = result.minus;
+    options = options ? options : {};
+    var ch = this.ch         //数字 字符
+        , ch_u = this.ch_u   //单位 字符
+        , ch_o = this.other  //负,点 字符
+        , n0 = ch.charAt(0); //零 字符
+    var _int = result.int             //整数部分
+        , _decimal = result.decimal   //小数部分
+        , _minus = result.minus;      //负数标识
     var int = ""
         , dicimal = ""
         , minus = _minus ? ch_o.charAt(0) : ''; //符号位
+   
+    var encodeInt = function encodeInt(_int,_m){
+        _int = tool.getNumbResult(_int).int;
+        var int = "";
+        var tenm = arguments.length > 1 ? arguments[1] : options.tenMin;
+        //一位整数 
+        if (_int.length == 1) return ch.charAt(+_int);
+        //两位整数
+        if (tenm && _int.length == 2 && _int.charAt(0) === "1") {
+            //10的口语化处理
+            int = ch_u.charAt(1);
+            int += _int.charAt(1) == "0" ? "" : ch.charAt(+_int.charAt(1));
+        } else if (_int.length <= 4) {
+            //小于四位
+            for (var i = 0, n = _int.length; n--;) {
+                var _num = _int.charAt(i++);
+                int += ch.charAt(+_num) + (+_num && n ? ch_u.charAt(n) : '')
+            }
+        } else {
+            //大数递归
+            var d = _int.length / 4 >> 0
+                , y = _int.length % 4
+                , es = y || 4;
+            while (y == 0 || !ch_u.charAt(3 + d)) {
+                y += 4;
+                d--;
+            }
+            int = encodeInt(_int.substr(0, y),tenm) + ch_u.charAt(3 + d)
+                + (~(_int.substr(y - 1, 2).indexOf("0")) ? n0 : '')
+                + encodeInt(_int.substr(y), false)
+        }
+        int = zero_comm(int, n0); //修整零
+        //console.log(_int,int,tenm);
+        return int;
+    }
 
     //转换小数部分
     if (_decimal) {
@@ -58,49 +100,25 @@ function toCL(num, m, ww, dg) {
     }
 
     //转换整数部分
-
-    //一位整数 
-    if (_int.length == 1) return minus + ch.charAt(+_int) + dicimal;
-
-    //两位整数
-    if (m && _int.length == 2 && _int.charAt(0) === "1") {
-        //10的口语化处理
-        int = ch_u.charAt(1);
-        int += _int.charAt(1) == "0" ? "" : ch.charAt(+_int.charAt(1));
-    } else if (_int.length <= 4) {
-        //小于四位
-        for (var i = 0, n = _int.length; n--;) {
-            var _num = _int.charAt(i++);
-            int += ch.charAt(+_num) + (+_num && n ? ch_u.charAt(n) : '')
-        }
-    } else {
-        //大数递归
-        var d = _int.length / 4 >> 0
-            , y = _int.length % 4
-            , es = y || 4;
-        while (y == 0 || !ch_u.charAt(3 + d)) {
-            y += 4;
-            d--;
-        }
-        int = toCL.call(this, _int.substr(0, y), m, ww, 1) + ch_u.charAt(3 + d)
-            + (~(_int.substr(y - 1, 2).indexOf("0")) ? n0 : '')
-            + toCL.call(this, _int.substr(y), false, ww, 1)
-    }
-    //console.log(int);
-    //int = int.replace(reg1,n0).replace(reg,'');
-    int = zero_comm(int, n0);
-
-    // int = zero_comm(int,n0,'$');
-    if (!dg && ww && ch_u.length > 5) {
+    int = encodeInt(_int);  //转换整数
+    
+    //超级大数的万万化 
+    if (options.ww && ch_u.length > 5) {
         var dw_w = ch_u.charAt(4), dw_y = ch_u.charAt(5);
         var lasty = int.lastIndexOf(dw_y);
         if (~lasty) {
             int = int.substring(0, lasty).replace(new RegExp(dw_y, 'g'), dw_w + dw_w) + int.substring(lasty);
-
         }
     }
     return minus + int + dicimal;
 }
+
+/**
+ * 中文数字转阿拉伯数字
+ * 
+ * @param {string} cnnumb 中文数字字符串
+ * @returns Number
+ */
 function unCL(cnnumb) {
     var result = cnnumb.split(this.other.charAt(1));
     var _int = result[0].replace(this.other.charAt(0), "")
@@ -156,6 +174,13 @@ function unCL(cnnumb) {
     return rnum_a.join('');
 }
 
+/**
+ * 阿拉伯数字转金额
+ * 
+ * @param {String} num 阿拉伯数字/字符串 , 科学记数法字符串
+ * @param {Boolean} ww ww 超级大数的万万化开关
+ * @returns String
+ */
 function toMoney(num, ww) {
     var result = tool.getNumbResult(num);
     if (!result) {
@@ -163,82 +188,31 @@ function toMoney(num, ww) {
         return num;
     }
     var _num = result.num
-        , _decimal = result.decimal;
-
+        , _decimal = result.decimal
+        , ch_0 = this.ch.charAt(0);
     var xs_str = _decimal ? '' : this.m_z;
     if (_decimal) {
+        var mark_0;
         for (var i = 0; i < this.m_u.length - 1; i++) {
-            xs_str += _decimal.charAt(i) == 0 ? '' : toCL.call(this, _decimal.charAt(i)) + this.m_u.charAt(i + 1);
+            if(_decimal.charAt(i) != "0"){
+                xs_str += CL.call(this, _decimal.charAt(i)) + this.m_u.charAt(i + 1);
+            }
+            if(_decimal.charAt(i) == "0" && !mark_0){
+                xs_str += ch_0;
+                mark_0 = true;
+            }
+            xs_str = zero_comm(xs_str,ch_0,"$")
         }
     }
     if (_num != "0" || xs_str == this.m_z || xs_str == '') {
-        return this.m_t + toCL.call(this, _num, null, ww) + this.m_u.charAt(0) + xs_str;
+        return this.m_t + CL.call(this, _num, {ww:ww}) + this.m_u.charAt(0) + xs_str;
     } else {
         return this.m_t + xs_str;
     }
 }
 
-function getNzhObjByLang(lang_s, lang_b) {
-    return {
-        encodeS: function (num, m, ww) {
-            return toCL.call(lang_s, num, (m == null ? true : m), (ww == null ? Nzh._y2ww : ww));
-        },
-        encodeB: function (num, m, ww) {
-            return toCL.call(lang_b, num, m, (ww == null ? Nzh._y2ww : ww));
-        },
-        decodeS: function (str) {
-            return unCL.call(lang_s, str);
-        },
-        decodeB: function (str) {
-            return unCL.call(lang_b, str);
-        },
-        toMoney: function (num, ww) {
-            return toMoney.call(lang_b, num, (ww == null ? Nzh._y2ww : ww));
-        }
-    }
+module.exports = {
+    CL:CL,
+    unCL:unCL,
+    toMoney:toMoney
 }
-
-var langs = {
-        s:{
-            ch: '零一二三四五六七八九'
-            ,ch_u: '个十百千万亿'
-            ,other: '负点'
-        },
-        b:{
-            ch: '零壹贰叁肆伍陆柒捌玖'
-            ,ch_u: '个拾佰仟万亿'
-            ,other: '负点'
-            ,m_t: '人民币'
-            ,m_z: '整'
-            ,m_u: '元角分'
-        },
-        s_hk:{
-            ch: '零一二三四五六七八九'
-            ,ch_u: '個十百千萬億'
-            ,other: '負點' 
-        },
-        b_hk:{
-            ch: '零壹貳參肆伍陸柒捌玖'
-            ,ch_u: '個拾佰仟萬億'
-            ,other: '負點' 
-            ,m_t: '$'
-            ,m_z: '整'
-            ,m_u: '圓角分'
-        }
-    }
-
-var Nzh = function (lang) {
-    this.lang = lang;
-};
-Nzh.prototype = {
-    encode: function () { return toCL.apply(this.lang, arguments) }
-    , decode: function () { return unCL.apply(this.lang, arguments) }
-    , toMoney: function () { return toMoney.apply(this.lang, arguments) }
-}
-Nzh.langs = langs;
-Nzh._y2ww = true; //默认启用 "万万"
-Nzh.cn = getNzhObjByLang(langs.s, langs.b);
-Nzh.hk = getNzhObjByLang(langs.s_hk, langs.b_hk);
-
-
-console.log(Nzh.cn.encodeS("1.203e11"));
