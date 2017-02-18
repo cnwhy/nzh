@@ -2,7 +2,12 @@
 var REG_NUMBER = /^([+-])?0*(\d+)(\.(\d+))?$/;
 var REG_E = /^([+-])?0*(\d+)(\.(\d+))?e(([+-])?(\d+))$/i;
 
-//科学计数法转十进制
+/**
+ * 科学计数法转十进制
+ * 
+ * @param {string} num 科学记数法字符串
+ * @returns string 
+ */
 var e2ten = exports.e2ten = function (num) {
 	var result = REG_E.exec(num.toString());
 	if (!result) return num;
@@ -27,6 +32,13 @@ var e2ten = exports.e2ten = function (num) {
 	return (result[1] == "-" ? "-" : "") + zs + (xs ? "." + xs : "");
 }
 
+
+/**
+ * 分板数字字符串
+ * 
+ * @param {string} num NumberString
+ * @returns object
+ */
 exports.getNumbResult = function (num) {
 	var result = REG_NUMBER.exec(num.toString());
 	if (!result && REG_E.test(num.toString())) {
@@ -42,7 +54,13 @@ exports.getNumbResult = function (num) {
 	}
 }
 
-//数组归一 (按索引覆盖合并数组,并清空被合并的数组)
+/**
+ * 数组归一 (按索引覆盖合并数组,并清空被合并的数组)
+ * 
+ * @param {array} baseArray 基础数组
+ * @param {...array} array1 
+ * @returns array
+ */
 exports.centerArray = function centerArray(baseArray, array1 /*[, array2[, ...[, arrayN]]]*/) {
     baseArray.splice.apply(baseArray,[0,array1.length].concat(array1.splice(0, array1.length)));
     if (arguments.length > 2) {
@@ -52,3 +70,40 @@ exports.centerArray = function centerArray(baseArray, array1 /*[, array2[, ...[,
     }
     return baseArray;
 }
+
+/**
+ * 检查对像属性 (非原型链)
+ * 
+ * @param {any} obj
+ * @param {any} key
+ * @returns
+ */
+var hasAttr = exports.hasAttr = function(obj,key){
+	return Object.prototype.hasOwnProperty.call(obj,key);
+}
+
+/**
+ * 扩展对像(浅复制)
+ * 
+ * @param {any} obj
+ * @param {any} obj1
+ * @returns
+ */
+exports.extend = function(obj){
+	var name 
+		,target = arguments[ 0 ] || {};
+	var objs = Array.prototype.slice.call(arguments,1);
+
+	for(var i=0; i<objs.length; i++){
+		var _obj = objs[i];
+		for(name in _obj){
+			if(hasAttr(_obj,name)){
+				target[name] = _obj[name];
+			}
+		}
+	}
+	return target;
+}
+
+
+

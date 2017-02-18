@@ -14,71 +14,67 @@
         throw new Error("加载 " + name + " 模块失败！，请检查您的环境！")
     }
 }('Nzh', function () {
-    var nzhClass = require("./src");
+    var nzhClass = require("./src/");
+    var utils = require("./src/utils")
     var langs = {
-        s:{
-            ch: '零一二三四五六七八九'
-            ,ch_u: '个十百千万亿'
-            ,other: '负点'
-        },
-        b:{
-            ch: '零壹贰叁肆伍陆柒捌玖'
-            ,ch_u: '个拾佰仟万亿'
-            ,other: '负点'
-            ,m_t: '人民币'
-            ,m_z: '整'
-            ,m_u: '元角分'
-        },
-        s_hk:{
-            ch: '零一二三四五六七八九'
-            ,ch_u: '個十百千萬億'
-            ,other: '負點' 
-        },
-        b_hk:{
-            ch: '零壹貳參肆伍陸柒捌玖'
-            ,ch_u: '個拾佰仟萬億'
-            ,other: '負點' 
-            ,m_t: '$'
-            ,m_z: '整'
-            ,m_u: '圓角分'
-        }
+        s:require("./src/langs/cn_s"),
+        b:require("./src/langs/cn_b"),
+        hk_s:require("./src/langs/hk_s"),
+        hk_b:require("./src/langs/hk_b")
     }
     function getNzhObjByLang(lang_s,lang_b){
         return {
-            encodeS: function (num, m, ww) {
-                return nzhClass.CL.call(lang_s, num,{
-                    ww: ww == null? Nzh._y2ww : ww,
-                    tenMin: m == null ? true : m
-                });
+            encodeS: function (num, options) {
+                options = utils.extend({ ww: Nzh._ww ,tenMin:true},options);
+                return nzhClass.CL.call(lang_s, num,options);
             },
-            encodeB: function (num, m, ww) {
-                return nzhClass.CL.call(lang_b, num, {
-                    ww: ww == null? Nzh._y2ww : ww,
-                    tenMin: m
-                });
+            encodeB: function (num, options) {
+                options = utils.extend({ww: Nzh._ww},options);
+                return nzhClass.CL.call(lang_b, num, options);
             },
-            decodeS: function (str) {
-                return nzhClass.unCL.call(lang_s, str);
+            decodeS: function (){
+                return nzhClass.unCL.apply(lang_s, arguments);
             },
-            decodeB: function(str){
-                return nzhClass.unCL.call(lang_b,str);
+            decodeB: function(){
+                return nzhClass.unCL.apply(lang_b, arguments);
             },
-            toMoney: function (num, ww) {
-                return nzhClass.toMoney.call(lang_b, num, (ww == null ? Nzh._y2ww : ww));
+            toMoney: function (num,options) {
+                options = utils.extend({ww:Nzh._ww},options);
+                return nzhClass.toMoney.call(lang_b, num, options);
             }
         }
     }
     var Nzh = function(lang){
         this.lang = lang;
+        this.encode = function(){return nzhClass.CL.apply(lang,arguments)}
+        this.decode = function(){return nzhClass.unCL.apply(lang,arguments)}
+        this.toMoney = function(){return nzhClass.toMoney.apply(lang,arguments)}
     };
-    Nzh.prototype = {
-        encode:function(){return nzhClass.toCL.apply(this.lang,arguments)}
-        ,decode:function(){return nzhClass.unCL.apply(this.lang,arguments)}
-        ,toMoney:function(){return nzhClass.toMoney.apply(this.lang,arguments)}
-    }
+
     Nzh.langs = langs;
-    Nzh._y2ww = true; //默认启用 "万万"
+    Nzh._ww = true; //默认启用 "万万"
     Nzh.cn = getNzhObjByLang(langs.s,langs.b);
-    Nzh.hk = getNzhObjByLang(langs.s_hk,langs.b_hk);
+    Nzh.hk = getNzhObjByLang(langs.hk_s,langs.hk_b);
+
+    // console.log(Nzh.cn.toMoney("0",{complete:true}));
+    // console.log(Nzh.cn.toMoney("10",{complete:true}));
+    // console.log(Nzh.cn.toMoney("0.00",{complete:true}));
+    // console.log(Nzh.cn.toMoney("0.00"));
+    // console.log(Nzh.cn.toMoney("1.1"));
+    // console.log(Nzh.cn.toMoney("0.11"));
+    // console.log(Nzh.cn.toMoney("0.01"));
+    // console.log(Nzh.cn.toMoney("1.01"));
+    // console.log(Nzh.cn.toMoney("-1.1",{complete:true}));
+    // console.log(Nzh.cn.toMoney("1e16",{ww:false}));
+    // console.log(Nzh.cn.toMoney("1e16",{ww:true}));
+    // console.log(Nzh.cn.encodeS("0",{tenMin:true}));
+    // console.log(Nzh.cn.encodeS("1.00001",{tenMin:true}));
+    // console.log(Nzh.cn.encodeS("1011100010",{tenMin:true}));
+    // console.log(Nzh.cn.encodeS("10.011e30",{tenMin:false,ww:true}));
+    // console.log(Nzh.cn.decodeS("十亿零十万"));
+    //  console.log(Nzh.cn.decodeS("一亿零万三千"));
+    
+    // 30,0010,0010
+
     return Nzh;
 }));
