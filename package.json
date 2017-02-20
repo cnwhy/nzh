@@ -1,13 +1,18 @@
 {
   "name": "nzh",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "数字转中文,大写,金额",
   "main": "nzh.js",
   "files": [
-    "nzh.js"
+    "src/*",
+    "dist/*",
+    "nzh.js",
+    "cn.js",
+    "hk.js"
   ],
   "scripts": {
-    "test": "./node_modules/.bin/_mocha test/test_node.js"
+    "test": "./node_modules/.bin/_mocha test/test_mocha.js",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -23,9 +28,15 @@
     "name": "cnwhy",
     "email": "w.why@163.com"
   },
-  "license": "BSD-2-Clause",
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-header": "^1.8.8",
+    "gulp-mocha": "^3.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.1",
     "mocha": "^3.0.2",
     "should": "^11.1.0"
-  }
+  },
+  "license": "BSD-2-Clause"
 }
