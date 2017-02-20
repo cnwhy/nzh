@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>数字转中文</title>
-	<script src="../nzh.js"></script>
+	<script src="../dist/nzh.js"></script>
 </head>
 <body>
 	<input id="n" type="text" onkeyup="show(this.value)" value="1023456789.123" />
@@ -18,7 +18,8 @@
 		var custom = new Nzh({
 			ch: '〇壹贰叁肆伍陆柒捌玖'
 			,ch_u: '个拾佰仟万亿兆京'
-			,other: '负点'
+			,ch_f: '负'
+			,ch_d: '点'
 			,m_t: '￥'
 			,m_z: '正'
 			,m_u: '元角分厘'

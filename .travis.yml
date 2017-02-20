@@ -8,11 +8,12 @@ node_js:
   - "5"
   - "6"
   - "7"
-#before_script:
-#  - npm install -g gulp
-# script: grunt
-# Run test script, depending on istanbul install
-#  - "test -n $(npm -ps ls istanbul) || npm test"
+before_script:
+  - npm install -g gulp
+#  - npm install -g istanbul
+script: gulp
+#Run test script, depending on istanbul install
+# - "test -n $(npm -ps ls istanbul) || npm test"
 #  - "test -z $(npm -ps ls istanbul) || npm run-script test-travis"
 
 #after_script:

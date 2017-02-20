@@ -1,3 +1,55 @@
+/*!
+ * nzh v1.0.0
+ * Homepage undefined
+ * License BSD-2-Clause
+ */
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (name, factory) {
+	if (typeof define === 'function' && (define.amd || define.cmd)) {
+		define([], factory);
+	} else if (typeof window !== "undefined" || typeof self !== "undefined") {
+		var global = typeof window !== "undefined" ? window : self;
+		global[name] = factory();
+	} else {
+		throw new Error("加载 " + name + " 模块失败！，请检查您的环境！")
+	}
+}('Nzh', function () {
+	return require("../hk");
+}))
+},{"../hk":2}],2:[function(require,module,exports){
+var getNzhObjByLang = require("./src/autoGet");
+var langs = {
+	s: require("./src/langs/hk_s"),
+	b: require("./src/langs/hk_b"),
+}
+module.exports = getNzhObjByLang(langs.s, langs.b);
+},{"./src/autoGet":3,"./src/langs/hk_b":5,"./src/langs/hk_s":6}],3:[function(require,module,exports){
+var nzhClass = require("./");
+var utils = require("./utils")
+function getNzhObjByLang(lang_s, lang_b) {
+	return {
+		encodeS: function (num, options) {
+			options = utils.extend({ ww: true, tenMin: true }, options);
+			return nzhClass.CL.call(lang_s, num, options);
+		},
+		encodeB: function (num, options) {
+			options = utils.extend({ ww: true }, options);
+			return nzhClass.CL.call(lang_b, num, options);
+		},
+		decodeS: function () {
+			return nzhClass.unCL.apply(lang_s, arguments);
+		},
+		decodeB: function () {
+			return nzhClass.unCL.apply(lang_b, arguments);
+		},
+		toMoney: function (num, options) {
+			options = utils.extend({ ww: true }, options);
+			return nzhClass.toMoney.call(lang_b, num, options);
+		}
+	}
+}
+module.exports = getNzhObjByLang;
+},{"./":4,"./utils":7}],4:[function(require,module,exports){
 var utils = require("./utils");
 
 //数组头部插0
@@ -232,3 +284,132 @@ module.exports = {
     unCL:unCL,
     toMoney:toMoney
 }
+},{"./utils":7}],5:[function(require,module,exports){
+module.exports = {
+    ch: '零壹貳參肆伍陸柒捌玖'
+    ,ch_u: '個拾佰仟萬億'
+    ,ch_f: '負'
+    ,ch_d: '點'
+    ,m_t: '$'
+    ,m_z: '整'
+    ,m_u: '圓角分'
+}
+},{}],6:[function(require,module,exports){
+module.exports = {
+    ch: '零一二三四五六七八九'
+    ,ch_u: '個十百千萬億'
+    ,ch_f: '負'
+    ,ch_d: '點'
+}
+},{}],7:[function(require,module,exports){
+'use strict';
+var REG_NUMBER = /^([+-])?0*(\d+)(\.(\d+))?$/;
+var REG_E = /^([+-])?0*(\d+)(\.(\d+))?e(([+-])?(\d+))$/i;
+
+/**
+ * 科学计数法转十进制
+ * 
+ * @param {string} num 科学记数法字符串
+ * @returns string 
+ */
+var e2ten = exports.e2ten = function (num) {
+	var result = REG_E.exec(num.toString());
+	if (!result) return num;
+	var zs = result[2]
+		, xs = result[4] || ""
+		, e = result[5] ? +result[5] : 0;
+	if (e > 0) {
+		var _zs = xs.substr(0, e);
+		_zs = _zs.length < e ? _zs + new Array(e - _zs.length + 1).join("0") : _zs;
+		xs = xs.substr(e);
+		zs += _zs;
+	} else {
+		e = -e;
+		var s_start = zs.length - e;
+		s_start = s_start < 0 ? 0 : s_start;
+		var _xs = zs.substr(s_start, e);
+		_xs = _xs.length < e ? new Array(e - _xs.length + 1).join("0") + _xs : _xs;
+		zs = zs.substring(0, s_start);
+		xs = _xs + xs;
+	}
+	zs = zs == "" ? "0" : zs;
+	return (result[1] == "-" ? "-" : "") + zs + (xs ? "." + xs : "");
+}
+
+
+/**
+ * 分板数字字符串
+ * 
+ * @param {string} num NumberString
+ * @returns object
+ */
+exports.getNumbResult = function (num) {
+	var result = REG_NUMBER.exec(num.toString());
+	if (!result && REG_E.test(num.toString())) {
+		result = REG_NUMBER.exec(e2ten(num.toString()))
+	}
+	if (result) {
+		return {
+			int: result[2],
+			decimal: result[4],
+			minus: result[1] == "-",
+			num: result.slice(1, 3).join('')
+		}
+	}
+}
+
+/**
+ * 数组归一 (按索引覆盖合并数组,并清空被合并的数组)
+ * 
+ * @param {array} baseArray 基础数组
+ * @param {...array} array1 
+ * @returns array
+ */
+exports.centerArray = function centerArray(baseArray, array1 /*[, array2[, ...[, arrayN]]]*/) {
+    baseArray.splice.apply(baseArray,[0,array1.length].concat(array1.splice(0, array1.length)));
+    if (arguments.length > 2) {
+        var r = [].slice.call(arguments, 2);
+        r.unshift(baseArray);
+        centerArray.apply(null, r);
+    }
+    return baseArray;
+}
+
+/**
+ * 检查对像属性 (非原型链)
+ * 
+ * @param {any} obj
+ * @param {any} key
+ * @returns
+ */
+var hasAttr = exports.hasAttr = function(obj,key){
+	return Object.prototype.hasOwnProperty.call(obj,key);
+}
+
+/**
+ * 扩展对像(浅复制)
+ * 
+ * @param {any} obj
+ * @param {any} obj1
+ * @returns
+ */
+exports.extend = function(obj){
+	var name 
+		,target = arguments[ 0 ] || {};
+	var objs = Array.prototype.slice.call(arguments,1);
+
+	for(var i=0; i<objs.length; i++){
+		var _obj = objs[i];
+		for(name in _obj){
+			if(hasAttr(_obj,name)){
+				target[name] = _obj[name];
+			}
+		}
+	}
+	return target;
+}
+
+
+
+
+},{}]},{},[1])
