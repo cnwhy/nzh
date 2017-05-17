@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test CMD</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
+	<script src="http://apps.bdimg.com/libs/seajs/2.3.0/sea.js"></script>
+    <script src="../../node_modules/mocha/mocha.js"></script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script>mocha.setup('bdd');</script>
+    <script>
+      describe("CMD模块测试（seajs）",function(){
+        it('nzh',function(done){
+          seajs.use(['../../dist/nzh'],function(Nzh){
+            if(!Nzh || !Nzh.cn || !Nzh.hk){
+              done('加载失败!')
+            }
+            done();
+          });
+        })
+        it('nzh.min',function(done){
+          seajs.use(['../../dist/nzh.min'],function(Nzh){
+            if(!Nzh || !Nzh.cn || !Nzh.hk){
+              done('加载失败!')
+            }
+            done();
+          });
+        })
+        it('nzh.cn',function(done){
+          seajs.use(['../../dist/nzh.cn'],function(Nzh){
+            if(!Nzh || !Nzh.encodeS || !Nzh.encodeB){
+              done('加载失败!')
+            }
+            done();
+          });
+        })
+        it('nzh.cn.min',function(done){
+          seajs.use(['../../dist/nzh.cn.min'],function(Nzh){
+            if(!Nzh || !Nzh.encodeS || !Nzh.encodeB){
+              done('加载失败!')
+            }
+            done();
+          });
+        })
+        it('nzh.hk',function(done){
+          seajs.use(['../../dist/nzh.hk'],function(Nzh){
+            if(!Nzh || !Nzh.encodeS || !Nzh.encodeB){
+              done('加载失败!')
+            }
+            done();
+          });
+        })
+        it('nzh.hk.min',function(done){
+          seajs.use(['../../dist/nzh.hk.min'],function(Nzh){
+            if(!Nzh || !Nzh.encodeS || !Nzh.encodeB){
+              done('加载失败!')
+            }
+            done();
+          });
+        })
+      })      
+    </script>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>

@@ -33,10 +33,9 @@
     "gulp-browserify": "^0.5.1",
     "gulp-header": "^1.8.8",
     "gulp-mocha": "^3.0.1",
+    "gulp-mocha-phantomjs": "^0.12.1",
     "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.1",
-    "mocha": "^3.0.2",
-    "should": "^11.1.0"
+    "gulp-uglify": "^2.0.1"
   },
   "license": "BSD-2-Clause"
 }
