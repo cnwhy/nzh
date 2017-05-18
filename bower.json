@@ -15,11 +15,12 @@
   "homepage": "https://github.com/cnwhy/nzh",
   "ignore": [
     "**/.*",
+    "./index.html",
     "node_modules",
     "bower_components",
     "test",
-    "tests",
     "demo",
+    "docs",
     "browser-source"
   ]
 }
