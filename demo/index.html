@@ -9,7 +9,7 @@
 	<input id="n" type="text" onkeyup="show(this.value)" value="1023456789.123" />
 	<button onclick="show($('n').value)">计算</button>
 	<br />结果：<br />
-	<textarea id="n1" cols="100" rows="15"></textarea>
+	<textarea id="n1" cols="100" rows="15" style="max-width:100%;"></textarea>
 	<script>
 		$ = function(){
 			return document.getElementById.apply(document,arguments);

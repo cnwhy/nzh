@@ -7,11 +7,24 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//unpkg.com/docsify/themes/vue.css">
 </head>
+<style>
+body .markdown-section ul ul, 
+body .markdown-section ul ol, 
+body .markdown-section ol ol,
+body .markdown-section ol ul{
+  margin:0.2em 0;
+}
+</style>
 <body>
   <div id="app"></div>
 </body>
 <script>
   window.$docsify = {
+    alias: {
+      '/': '../'
+    },
+    loadSidebar: true,
+    subMaxLevel: 3,
     repo: '',
     name: '',
   }
