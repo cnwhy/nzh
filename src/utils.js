@@ -32,9 +32,8 @@ var e2ten = exports.e2ten = function (num) {
 	return (result[1] == "-" ? "-" : "") + zs + (xs ? "." + xs : "");
 }
 
-
 /**
- * 分板数字字符串
+ * 分析数字字符串
  * 
  * @param {string} num NumberString
  * @returns object
@@ -74,8 +73,8 @@ exports.centerArray = function centerArray(baseArray, array1 /*[, array2[, ...[,
 /**
  * 检查对像属性 (非原型链)
  * 
- * @param {any} obj
- * @param {any} key
+ * @param {object} obj
+ * @param {string} key
  * @returns
  */
 var hasAttr = exports.hasAttr = function(obj,key){
@@ -85,8 +84,8 @@ var hasAttr = exports.hasAttr = function(obj,key){
 /**
  * 扩展对像(浅复制)
  * 
- * @param {any} obj
- * @param {any} obj1
+ * @param {object} obj
+ * @param {object} obj1
  * @returns
  */
 exports.extend = function(obj){
@@ -106,4 +105,50 @@ exports.extend = function(obj){
 }
 
 
+/**
+ * 获取真实数位
+ * 
+ * @param {number} index 中文单位的索引
+ */
+exports.getDigit = function(index){
+	return index >= 5 ? (index - 4) * 4 + 4 : index;
+}
 
+/**
+ * 往数组头部插入0
+ * 
+ * @param {array} arr 
+ * @param {number} n 
+ */
+exports.unshiftZero = function(arr,n){
+	if (n == null) n = 1;
+    if (n <= 0) return;
+    for (; n--;) arr.unshift(0);
+}
+
+/**
+ * 清理多余"零"
+ * 
+ * @param {any} str 
+ * @param {any} zero "零"字符
+ * @param {any} type 清理模式 ^ - 开头, $ - 结尾, nto1 - 多个连续变一个
+ * @returns 
+ */
+exports.clearZero = function (str, zero, type) {
+    if(str == null) return "";
+    var reg0 = ~"*.?+$^[](){}|\\/".indexOf(zero) ? "\\" + zero : zero; 
+    var arg_s = new RegExp("^"+reg0+"+")
+        ,arg_e = new RegExp(reg0+"+$")
+        ,arg_d = new RegExp(reg0+"{2}","g")
+    str = str.toString();
+    if (type == "^") {
+        str = str.replace(arg_s,"");
+    }
+    if (!type || type == "$") {
+        str = str.replace(arg_e,"");
+    }
+    if (!type || type == "nto1") {
+        str = str.replace(arg_d,zero);
+    }
+    return str;
+}

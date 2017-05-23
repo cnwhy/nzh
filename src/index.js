@@ -1,29 +1,6 @@
 var utils = require("./utils");
 
-//数组头部插0
-function unshift0(arr, n , number) {
-    if (n == null) n = 1;
-    for (; n--;) arr.unshift(number || 0);
-}
 
-function zero_comm(str, char_0, type) {
-    if(str == null) return "";
-    var reg0 = ~"*.?+$^[](){}|\\/".indexOf(char_0) ? "\\" + char_0 : char_0; 
-    var arg_s = new RegExp("^"+reg0+"+")
-        ,arg_e = new RegExp(reg0+"+$")
-        ,arg_d = new RegExp(reg0+"{2}","g")
-    str = str.toString();
-    if (type == "^") {
-        str = str.replace(arg_s,"");
-    }
-    if (!type || type == "$") {
-        str = str.replace(arg_e,"");
-    }
-    if (!type || type == "nto1") {
-        str = str.replace(arg_d,char_0);
-    }
-    return str;
-}
 
 /**
  * 阿拉伯数字转中文数字
@@ -79,13 +56,13 @@ function CL(num, options) {
                 + (~(_int.substr(y - 1, 2).indexOf("0")) ? n0 : '')
                 + encodeInt(_int.substr(y), tenm)
         }
-        int = zero_comm(int, n0); //修整零
+        int = utils.clearZero(int, n0); //修整零
         return int;
     }
 
     //转换小数部分
     if (_decimal) {
-        _decimal = zero_comm(_decimal,"0","$"); //去除尾部0
+        _decimal = utils.clearZero(_decimal,"0","$"); //去除尾部0
         for (var x = 0; x < _decimal.length; x++) {
             dicimal += ch.charAt(+_decimal.charAt(x));
         }
@@ -129,9 +106,6 @@ function unCL(cnnumb) {
     var cnarr = _int.split('');
     var rnum = 0, num = 0, _num = 0, dw = 0, maxdw = 0;
     var rnum_a = [], num_a = [], _num_a = [];
-    function wei(u) {
-        return u >= 5 ? (u - 4) * 4 + 4 : u;
-    }
     for (var i = 0; i < cnarr.length; i++) {
         var chr = cnarr[i];
         var n = 0, u = 0;
@@ -140,19 +114,20 @@ function unCL(cnnumb) {
             if(n>0) _num_a.unshift(n);
             //_num_a.unshift(n);
         } else if (~(u = this.ch_u.indexOf(chr))) {
+            var digit = utils.getDigit(u);
             if (dw > u) {//正常情况
-                unshift0(_num_a, wei(u));
+                utils.unshiftZero(_num_a, digit);
                 utils.centerArray(num_a, _num_a);
             } else if (u >= maxdw) {//后跟大单位
-                maxdw = u;
                 if (i == 0) _num_a = [1];
                 utils.centerArray(rnum_a, num_a, _num_a);
-                if(rnum_a.length>0) unshift0(rnum_a, wei(u));
+                if(rnum_a.length>0) utils.unshiftZero(rnum_a, digit);
+                maxdw = u;
             } else {
-                dw = u;
                 if(_num_a.length == 0 && dw_s == chr) _num_a = [1];
                 utils.centerArray(num_a, _num_a);
-                unshift0(num_a, wei(u));
+                utils.unshiftZero(num_a, utils.getDigit(u));
+                dw = u;
             }
         }
     }
@@ -205,7 +180,7 @@ function toMoney(num, options) {
         }
         zs_str = CL.call(this, _num, options) + this.m_u.charAt(0);
     }else{
-        _decimal = zero_comm(_decimal,"0","$");//去除尾部的0
+        _decimal = utils.clearZero(_decimal,"0","$");//去除尾部的0
         if(_decimal){
             var mark_0;
             for (var i = 0; i < this.m_u.length - 1; i++) {
@@ -218,7 +193,7 @@ function toMoney(num, options) {
                     mark_0 = true;
                 }
             }
-            //if(_num == "0"){xs_str = zero_comm(xs_str,ch_0,"^")}
+            //if(_num == "0"){xs_str = utils.clearZero(xs_str,ch_0,"^")}
         }
         if(_num != "0" || zs_str || !xs_str){
             zs_str = CL.call(this, _num, options) + this.m_u.charAt(0) + zs_str;
