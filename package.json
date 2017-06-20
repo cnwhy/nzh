@@ -2,6 +2,7 @@
   "name": "nzh",
   "version": "1.0.0",
   "description": "数字转中文,大写,金额",
+  "homepage": "http://cnwhy.github.io/nzh",
   "main": "nzh.js",
   "files": [
     "src/*",
