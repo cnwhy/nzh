@@ -11,7 +11,7 @@ node_js:
 before_script:
   - npm install -g gulp
 #  - npm install -g istanbul
-script: gulp
+script: gulp test-server
 #Run test script, depending on istanbul install
 # - "test -n $(npm -ps ls istanbul) || npm test"
 #  - "test -z $(npm -ps ls istanbul) || npm run-script test-travis"
