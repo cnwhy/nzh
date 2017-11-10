@@ -1,5 +1,5 @@
 /*!
- * nzh v1.0.1
+ * nzh v1.0.2
  * Homepage http://cnwhy.github.io/nzh
  * License BSD-2-Clause
  */
@@ -87,7 +87,7 @@ function CL(num, options) {
         _int = utils.getNumbResult(_int).int;
         var int = ""
             , tenm = arguments.length > 1 ? arguments[1] : options.tenMin
-            _length = _int.length;
+            , _length = _int.length;
         //一位整数 
         if (_length == 1) return ch.charAt(+_int);
         if (_length <= 4) { //小于四位
