@@ -145,7 +145,7 @@ function unCL(cnnumb) {
 
     }
     if (_minus) rnum_a.unshift('-')
-    return Number.parseFloat(rnum_a.join(''));
+    return parseFloat(rnum_a.join(''));
 }
 
 /**
