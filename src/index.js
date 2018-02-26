@@ -104,7 +104,7 @@ function unCL(cnnumb) {
         _int = _int.replace(new RegExp(dw_w + "{2}", "g"), dw_y);
 
     var cnarr = _int.split('');
-    var rnum = 0, num = 0, _num = 0, dw = 0, maxdw = 0;
+    var dw = 0, maxdw = 0;
     var rnum_a = [], num_a = [], _num_a = [];
     for (var i = 0; i < cnarr.length; i++) {
         var chr = cnarr[i];
@@ -144,8 +144,8 @@ function unCL(cnnumb) {
         decimal = +decimal;
 
     }
-    rnum = (rnum + num + _num + decimal) * (_minus ? -1 : 1);
-    return rnum_a.join('');
+    if (_minus) rnum_a.unshift('-')
+    return Number.parseFloat(rnum_a.join(''));
 }
 
 /**
