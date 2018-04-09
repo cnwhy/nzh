@@ -61,13 +61,13 @@ exports.getNumbResult = function (num) {
  * @returns array
  */
 exports.centerArray = function centerArray(baseArray, array1 /*[, array2[, ...[, arrayN]]]*/) {
-    baseArray.splice.apply(baseArray,[0,array1.length].concat(array1.splice(0, array1.length)));
-    if (arguments.length > 2) {
-        var r = [].slice.call(arguments, 2);
-        r.unshift(baseArray);
-        centerArray.apply(null, r);
-    }
-    return baseArray;
+	baseArray.splice.apply(baseArray, [0, array1.length].concat(array1.splice(0, array1.length)));
+	if (arguments.length > 2) {
+		var r = [].slice.call(arguments, 2);
+		r.unshift(baseArray);
+		centerArray.apply(null, r);
+	}
+	return baseArray;
 }
 
 /**
@@ -77,8 +77,8 @@ exports.centerArray = function centerArray(baseArray, array1 /*[, array2[, ...[,
  * @param {string} key
  * @returns
  */
-var hasAttr = exports.hasAttr = function(obj,key){
-	return Object.prototype.hasOwnProperty.call(obj,key);
+var hasAttr = exports.hasAttr = function (obj, key) {
+	return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
 /**
@@ -88,15 +88,15 @@ var hasAttr = exports.hasAttr = function(obj,key){
  * @param {object} obj1
  * @returns
  */
-exports.extend = function(obj){
-	var name 
-		,target = arguments[ 0 ] || {};
-	var objs = Array.prototype.slice.call(arguments,1);
+exports.extend = function (obj) {
+	var name
+		, target = arguments[0] || {};
+	var objs = Array.prototype.slice.call(arguments, 1);
 
-	for(var i=0; i<objs.length; i++){
+	for (var i = 0; i < objs.length; i++) {
 		var _obj = objs[i];
-		for(name in _obj){
-			if(hasAttr(_obj,name)){
+		for (name in _obj) {
+			if (hasAttr(_obj, name)) {
 				target[name] = _obj[name];
 			}
 		}
@@ -110,7 +110,7 @@ exports.extend = function(obj){
  * 
  * @param {number} index 中文单位的索引
  */
-exports.getDigit = function(index){
+exports.getDigit = function (index) {
 	return index >= 5 ? (index - 4) * 4 + 4 : index;
 }
 
@@ -120,10 +120,10 @@ exports.getDigit = function(index){
  * @param {array} arr 
  * @param {number} n 
  */
-exports.unshiftZero = function(arr,n){
+exports.unshiftZero = function (arr, n) {
 	if (n == null) n = 1;
-    if (n <= 0) return;
-    for (; n--;) arr.unshift(0);
+	if (n <= 0) return;
+	for (; n--;) arr.unshift(0);
 }
 
 /**
@@ -135,20 +135,20 @@ exports.unshiftZero = function(arr,n){
  * @returns 
  */
 exports.clearZero = function (str, zero, type) {
-    if(str == null) return "";
-    var reg0 = ~"*.?+$^[](){}|\\/".indexOf(zero) ? "\\" + zero : zero; 
-    var arg_s = new RegExp("^"+reg0+"+")
-        ,arg_e = new RegExp(reg0+"+$")
-        ,arg_d = new RegExp(reg0+"{2}","g")
-    str = str.toString();
-    if (type == "^") {
-        str = str.replace(arg_s,"");
-    }
-    if (!type || type == "$") {
-        str = str.replace(arg_e,"");
-    }
-    if (!type || type == "nto1") {
-        str = str.replace(arg_d,zero);
-    }
-    return str;
+	if (str == null) return "";
+	var reg0 = ~"*.?+$^[](){}|\\/".indexOf(zero) ? "\\" + zero : zero;
+	var arg_s = new RegExp("^" + reg0 + "+")
+		, arg_e = new RegExp(reg0 + "+$")
+		, arg_d = new RegExp(reg0 + "{2}", "g")
+	str = str.toString();
+	if (type == "^") {
+		str = str.replace(arg_s, "");
+	}
+	if (!type || type == "$") {
+		str = str.replace(arg_e, "");
+	}
+	if (!type || type == "nto1") {
+		str = str.replace(arg_d, zero);
+	}
+	return str;
 }
