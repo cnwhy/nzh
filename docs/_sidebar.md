@@ -1,3 +1,2 @@
-- [首页](/)
-- [在线试一试](/demo)
-- [GitHub](https://github.com/cnwhy/nzh)
+* [Nzh](/)
+* [试一试](/demo)

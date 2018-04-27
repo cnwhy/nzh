@@ -87,7 +87,7 @@ nzhcn.toMoney("1",{outSymbol:false});      //壹元整
  - `complete`: 输出完整金额开关, `toMoney` 函数专用配置, 默认 `false`   
  - `outSymbol`: 输出金额前缀字符, `toMoney` 函数专用配置, 默认 `true` 
 
-### 自定义 new Nzh(langs)
+### new Nzh(langs) 自定义
 
 ```javascript
 var nzh = new Nzh({
