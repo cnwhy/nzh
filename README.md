@@ -110,5 +110,5 @@ nzh.toMoney("1.234");           // 人民币壹元贰角叁分肆厘
 #### nzh.decode(zh_num,options)
 中文转数字
 
-#### nzh.encode(num,options)
+#### nzh.toMoney(num,options)
 数字转金额
