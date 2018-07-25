@@ -85,7 +85,7 @@ gulp.task('rollup', function () {
 })
 
 gulp.task('min',['rollup'],function () {
-	return gulp.src(outputDir+'*.js')
+	return gulp.src(['dist/!(*.min).js'])
 	.pipe(uglify())
 	.pipe(header(banner))
 	.pipe(rename({
