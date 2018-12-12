@@ -1,5 +1,5 @@
 /*!
- * nzh v1.0.3
+ * nzh v1.0.4
  * Homepage http://cnwhy.github.io/nzh
  * License BSD-2-Clause
  */
@@ -198,7 +198,7 @@
 		var ch = this.ch             //数字
 			, ch_u = this.ch_u       //单位
 			, ch_f = this.ch_f || "" //负
-			, ch_d = this.ch_d || "" //点
+			, ch_d = this.ch_d || "." //点
 			, n0 = ch.charAt(0); //零
 		var _int = result.int             //整数部分
 			, _decimal = result.decimal   //小数部分
@@ -206,7 +206,6 @@
 		var int = ""
 			, dicimal = ""
 			, minus = _minus ? ch_f : ''; //符号位
-
 		var encodeInt = function encodeInt(_int, _m, _dg) {
 			_int = utils.getNumbResult(_int).int;
 			var int = ""
@@ -214,7 +213,7 @@
 				, _length = _int.length;
 			//一位整数 
 			if (_length == 1) return ch.charAt(+_int);
-			if (_length <= 4) { //小于四位
+			if (_length <= 4) { //四位及以下
 				for (var i = 0, n = _length; n--;) {
 					var _num = +_int.charAt(i);
 					int += (tenm && _length == 2 && i == 0 && _num == 1) ? "" : ch.charAt(_num);
@@ -224,13 +223,17 @@
 			} else {  //大数递归
 				var d = _int.length / 4 >> 0
 					, y = _int.length % 4;
+				//"兆","京"等单位处理
 				while (y == 0 || !ch_u.charAt(3 + d)) {
 					y += 4;
 					d--;
 				}
-				int = encodeInt(_int.substr(0, y), tenm) + ch_u.charAt(3 + d)
-					+ (~(_int.substr(y - 1, 2).indexOf("0")) ? n0 : '')
-					+ encodeInt(_int.substr(y), tenm);
+				var _maxLeft = _int.substr(0, y), //最大单位前的数字
+					_other = _int.substr(y); //剩余数字
+
+				int = encodeInt(_maxLeft, tenm) + ch_u.charAt(3 + d) 
+					+ (_other.charAt(0) == '0' ? n0 : '') //单位后有0则加零 
+					+ encodeInt(_other, tenm); 
 			}
 			int = utils.clearZero(int, n0); //修整零
 			return int;

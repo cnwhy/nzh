@@ -112,3 +112,7 @@ nzh.toMoney("1.234");           // 人民币壹元贰角叁分肆厘
 
 #### nzh.toMoney(num,options)
 数字转金额
+
+## 参考资料
+- [繁读法](https://baike.baidu.com/item/%E7%B9%81%E8%AF%BB%E6%B3%95)
+- [中文数字](https://baike.baidu.com/item/%E7%B9%81%E8%AF%BB%E6%B3%95)
