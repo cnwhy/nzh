@@ -115,4 +115,4 @@ nzh.toMoney("1.234");           // 人民币壹元贰角叁分肆厘
 
 ## 参考资料
 - [繁读法](https://baike.baidu.com/item/%E7%B9%81%E8%AF%BB%E6%B3%95)
-- [中文数字](https://baike.baidu.com/item/%E7%B9%81%E8%AF%BB%E6%B3%95)
+- [中文数字](https://baike.baidu.com/item/%E4%B8%AD%E6%96%87%E6%95%B0%E5%AD%97)
