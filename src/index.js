@@ -55,7 +55,7 @@ function CL(num, options) {
 
 			int = encodeInt(_maxLeft, tenm) + ch_u.charAt(3 + d) 
 				+ (_other.charAt(0) == '0' ? n0 : '') //单位后有0则加零 
-				+ encodeInt(_other, tenm) 
+				+ encodeInt(_other, _other.length > 4 ? tenm : false) 
 		}
 		int = utils.clearZero(int, n0); //修整零
 		return int;
@@ -145,7 +145,7 @@ function unCL(cnnumb) {
 		decimal = +decimal;
 
 	}
-	if (_minus) rnum_a.unshift('-')
+	if (_minus) rnum_a.unshift('-');
 	return parseFloat(rnum_a.join(''));
 }
 
