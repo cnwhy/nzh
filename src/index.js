@@ -181,7 +181,8 @@ function toMoney(num, options) {
 		}
 		zs_str = CL.call(this, _num, options) + this.m_u.charAt(0);
 	} else {
-		_decimal = utils.clearZero(_decimal, "0", "$");//去除尾部的0
+		_decimal = _decimal.substr(0, this.m_u.length-1); 
+		_decimal = utils.clearZero(_decimal, "0", "$"); //去除尾部的0
 		if (_decimal) {
 			var mark_0;
 			for (var i = 0; i < this.m_u.length - 1; i++) {
