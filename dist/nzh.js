@@ -1,5 +1,5 @@
 /*!
- * nzh v1.0.4
+ * nzh v1.0.5
  * Homepage http://cnwhy.github.io/nzh
  * License BSD-2-Clause
  */
@@ -233,7 +233,7 @@
 
 				int = encodeInt(_maxLeft, tenm) + ch_u.charAt(3 + d) 
 					+ (_other.charAt(0) == '0' ? n0 : '') //单位后有0则加零 
-					+ encodeInt(_other, tenm); 
+					+ encodeInt(_other, _other.length > 4 ? tenm : false); 
 			}
 			int = utils.clearZero(int, n0); //修整零
 			return int;
@@ -359,7 +359,8 @@
 			}
 			zs_str = CL.call(this, _num, options) + this.m_u.charAt(0);
 		} else {
-			_decimal = utils.clearZero(_decimal, "0", "$");//去除尾部的0
+			_decimal = _decimal.substr(0, this.m_u.length-1); 
+			_decimal = utils.clearZero(_decimal, "0", "$"); //去除尾部的0
 			if (_decimal) {
 				var mark_0;
 				for (var i = 0; i < this.m_u.length - 1; i++) {
