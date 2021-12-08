@@ -1,5 +1,5 @@
 /*!
- * nzh v1.0.7
+ * nzh v1.0.8
  * Homepage http://cnwhy.github.io/nzh
  * License BSD-2-Clause
  */
