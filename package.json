@@ -1,6 +1,6 @@
 {
   "name": "nzh",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "数字转中文,大写,金额",
   "homepage": "http://cnwhy.github.io/nzh",
   "main": "nzh.js",
@@ -10,7 +10,8 @@
     "dist/*",
     "nzh.js",
     "cn.js",
-    "hk.js"
+    "hk.js",
+    "nzh.d.ts"
   ],
   "scripts": {
     "test": "./node_modules/.bin/_mocha test/test_mocha.js",
