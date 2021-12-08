@@ -35,19 +35,19 @@ interface Langs {
 	hk_b: Lang
 }
 interface BuiltIn {
-	encodeS(num: number, options: Options)
-	encodeB(num: number, options: Options)
-	decodeS(num: number, options: Options)
-	decodeB(num: number, options: Options)
-	toMoney(num: number, options: ToMoneyOptions)
+	encodeS(num: number, options?: Options)
+	encodeB(num: number, options?: Options)
+	decodeS(num: number, options?: Options)
+	decodeB(num: number, options?: Options)
+	toMoney(num: number, options?: ToMoneyOptions)
 }
 
 declare module 'nzh' {
 	export default class Nzh {
 		constructor(lang: Lang)
-		public encode(num: number, options: Options)
-		public decode(num: number, options: Options)
-		public toMoney(num: number, options: ToMoneyOptions)
+		public encode(num: number, options?: Options)
+		public decode(num: number, options?: Options)
+		public toMoney(num: number, options?: ToMoneyOptions)
 
 		static cn: BuiltIn
 		static hk: BuiltIn
@@ -56,17 +56,17 @@ declare module 'nzh' {
 }
 
 declare module 'nzh/cn' {
-	function encodeS(num: number, options: Options)
-	function encodeB(num: number, options: Options)
-	function decodeS(num: number, options: Options)
-	function decodeB(num: number, options: Options)
-	function toMoney(num: number, options: ToMoneyOptions)
+	function encodeS(num: number, options?: Options)
+	function encodeB(num: number, options?: Options)
+	function decodeS(num: number, options?: Options)
+	function decodeB(num: number, options?: Options)
+	function toMoney(num: number, options?: ToMoneyOptions)
 }
 
 declare module 'nzh/hk' {
-	function encodeS(num: number, options: Options)
-	function encodeB(num: number, options: Options)
-	function decodeS(num: number, options: Options)
-	function decodeB(num: number, options: Options)
-	function toMoney(num: number, options: ToMoneyOptions)
+	function encodeS(num: number, options?: Options)
+	function encodeB(num: number, options?: Options)
+	function decodeS(num: number, options?: Options)
+	function decodeB(num: number, options?: Options)
+	function toMoney(num: number, options?: ToMoneyOptions)
 }
