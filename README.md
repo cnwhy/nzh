@@ -74,6 +74,7 @@ nzhcn.encodeS(1e16, {ww: false});   // 一亿亿
 nzhcn.toMoney("1");                        //人民币壹元整
 nzhcn.toMoney("1",{complete:true});        //人民币壹元零角零分
 nzhcn.toMoney("0.1");                      //人民币壹角
+nzhcn.toMoney("0.1",{unOmitYuan:true});    //人民币零元壹角
 nzhcn.toMoney("0.1",{complete:true});      //人民币零元壹角零分
 
 //outSymbol  默认 true
@@ -84,7 +85,8 @@ nzhcn.toMoney("1",{outSymbol:false});      //壹元整
  - `tenMin`: 十的口语化开关, 默认值为 `false`
     - *注: `Nzh.cn`和`Nzh.hk`中的`encodeS`方法默认 `true`*
  - `ww`: "万万"化开关, 默认值为 `true`
- - `complete`: 输出完整金额开关, `toMoney` 函数专用配置, 默认 `false`   
+ - `unOmitYuan`: 个为零时不省略元, `toMoney` 函数专用配置, 默认 `false` 
+ - `complete`: 输出完整金额开关, `toMoney` 函数专用配置, 默认 `false` 
  - `outSymbol`: 输出金额前缀字符, `toMoney` 函数专用配置, 默认 `true` 
 
 ### new Nzh(langs) 自定义

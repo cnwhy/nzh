@@ -156,31 +156,32 @@ function unCL(cnnumb) {
  * @param {Object} options 转换配置
  *                         {
  *                             ww:{万万化开关 | true},
+ *                             unOmitYuan: {整数为0时不省略元| false},
  *                             complete:{完整金额格式 | false},
- *                             outSymbol:{就否输出金额符号 | true}                             
+ *                             outSymbol:{是否输出金额符号 | true}                             
  *                         }
  * @returns String
  */
 function toMoney(num, options) {
-	var def = { ww: true, complete: false, outSymbol: true };
+	var def = { ww: true, complete: false, outSymbol: true, unOmitYuan: false };
 	var result = utils.getNumbResult(num);
 	var ch_0 = this.ch.charAt(0);
 	options = typeof options == "object" ? options : {};
 	if (!result) { return num; }
 	options = utils.extend(def, options);
 
-	var _num = result.num
+	var _int = result.int
 		, _decimal = result.decimal || "";
 	var t_str = options.outSymbol ? this.m_t : ""
-		, zs_str = _decimal ? "" : this.m_z
+		, zs_str = result.minus ? this.ch_f : ""
 		, xs_str = "";
-
 	if (options.complete) {
 		for (var i = 1; i < this.m_u.length; i++) {
 			xs_str += CL.call(this, _decimal.charAt(i - 1) || "0") + this.m_u.charAt(i);
 		}
-		zs_str = CL.call(this, _num, options) + this.m_u.charAt(0);
+		zs_str += CL.call(this, _int, options) + this.m_u.charAt(0);
 	} else {
+		var hasYuan = options.unOmitYuan || _int !== '0';
 		_decimal = _decimal.substr(0, this.m_u.length-1); 
 		_decimal = utils.clearZero(_decimal, "0", "$"); //去除尾部的0
 		if (_decimal) {
@@ -191,15 +192,16 @@ function toMoney(num, options) {
 					mark_0 = false;
 				}
 				if (_decimal.charAt(i) === "0" && !mark_0) {
-					if (i != 0 || _num != "0") xs_str += ch_0; //当整为0时,小数前无需加零
+					if (i != 0 || _int !== "0") xs_str += ch_0; //当没有输出元时,小数前无需加零
 					mark_0 = true;
 				}
 			}
 			//if(_num == "0"){xs_str = utils.clearZero(xs_str,ch_0,"^")}
 		}
-		if (_num != "0" || zs_str || !xs_str) {
-			zs_str = CL.call(this, _num, options) + this.m_u.charAt(0) + zs_str;
+		if (hasYuan || !xs_str) {
+			zs_str += CL.call(this, _int, options) + this.m_u.charAt(0) + (result.decimal ? "" : this.m_z);
 		}
+		// if(result.minus) t_str += this.ch_f;
 	}
 	return t_str + zs_str + xs_str;
 }
