@@ -18,6 +18,10 @@ interface ToMoneyOptions extends Options {
 	 * 输出金额前缀字符, toMoney 函数专用配置, 默认 true
 	 * */
 	outSymbol?: boolean;
+	/*
+	 * 个位为0时不省略元，toMoney 函数专用配置, 默认 false
+	 * */
+	unOmitYuan?: boolean;
 }
 interface Lang {
 	ch: string;
