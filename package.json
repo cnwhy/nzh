@@ -1,10 +1,21 @@
 {
   "name": "nzh",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "数字转中文,大写,金额",
   "homepage": "http://cnwhy.github.io/nzh",
   "main": "nzh.js",
   "types": "nzh.d.ts",
+  "exports": {
+    ".": {
+      "types": "./nzh.d.ts"
+    },
+    "./cn": {
+      "types": "./nzh.d.ts"
+    },
+    "./hk": {
+      "types": "./nzh.d.ts"
+    }
+  },
   "files": [
     "src/*",
     "dist/*",
