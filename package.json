@@ -7,13 +7,19 @@
   "types": "nzh.d.ts",
   "exports": {
     ".": {
-      "types": "./nzh.d.ts"
+      "types": "./nzh.d.ts",
+      "import": "./nzh.js",
+      "require": "./nzh.js"
     },
     "./cn": {
-      "types": "./nzh.d.ts"
+      "types": "./nzh.d.ts",
+      "import": "./cn.js",
+      "require": "./cn.js"
     },
     "./hk": {
-      "types": "./nzh.d.ts"
+      "types": "./nzh.d.ts",
+      "import": "./hk.js",
+      "require": "./hk.js"
     }
   },
   "files": [
