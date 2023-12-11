@@ -22,6 +22,10 @@ interface ToMoneyOptions extends Options {
 	 * 个位为0时不省略元，toMoney 函数专用配置, 默认 false
 	 * */
 	unOmitYuan?: boolean;
+	/**
+	 * 不以源数据加整，以输出结果加“整”（只要输出的结果没有到分位就加“整”）
+	 */
+	forceZheng?: boolean; 
 }
 interface Lang {
 	ch: string;

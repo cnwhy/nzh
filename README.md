@@ -87,6 +87,7 @@ nzhcn.toMoney("1",{outSymbol:false});      //壹元整
  - `ww`: "万万"化开关, 默认值为 `true`
  - `unOmitYuan`: 个为零时不省略元, `toMoney` 函数专用配置, 默认 `false` 
  - `complete`: 输出完整金额开关, `toMoney` 函数专用配置, 默认 `false` 
+ - `forceZheng`: 以输出结果加“整”（只要输出的结果没有到分位就加“整”）, `toMoney` 函数专用配置, 默认 `false` 
  - `outSymbol`: 输出金额前缀字符, `toMoney` 函数专用配置, 默认 `true` 
 
 ### new Nzh(langs) 自定义
