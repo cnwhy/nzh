@@ -1,5 +1,5 @@
 /*!
- * nzh v1.0.10
+ * nzh v1.0.12
  * Homepage http://cnwhy.github.io/nzh
  * License BSD-2-Clause
  */
@@ -337,11 +337,12 @@
 	 *                             unOmitYuan: {整数为0时不省略元| false},
 	 *                             complete:{完整金额格式 | false},
 	 *                             outSymbol:{是否输出金额符号 | true}                             
+	 *                             forceZheng:{以转换结果加“整” | false}                             
 	 *                         }
 	 * @returns String
 	 */
 	function toMoney(num, options) {
-		var def = { ww: true, complete: false, outSymbol: true, unOmitYuan: false };
+		var def = { ww: true, complete: false, outSymbol: true, unOmitYuan: false, forceZheng: false };
 		var result = utils.getNumbResult(num);
 		var ch_0 = this.ch.charAt(0);
 		options = typeof options == "object" ? options : {};
@@ -377,9 +378,15 @@
 				//if(_num == "0"){xs_str = utils.clearZero(xs_str,ch_0,"^")}
 			}
 			if (hasYuan || !xs_str) {
-				zs_str += CL.call(this, _int, options) + this.m_u.charAt(0) + (result.decimal ? "" : this.m_z);
+				zs_str += CL.call(this, _int, options) + this.m_u.charAt(0);
+			}
+			if(!options.forceZheng) { 
+				zs_str += result.decimal ? "" : this.m_z;
+			}else if(xs_str == '' || xs_str.charAt(xs_str.length-1) !== this.m_u[2]){
+				xs_str += this.m_z;			
 			}
 			// if(result.minus) t_str += this.ch_f;
+			if(options.forceZheng);
 		}
 		return t_str + zs_str + xs_str;
 	}
