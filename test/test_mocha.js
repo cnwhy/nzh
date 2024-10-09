@@ -33,8 +33,9 @@ var fncn = new Nzh(require("../src/langs/cn_s"));
 inTest(toCN,function(data,opts){
     //console.log(data);
     it(data.join(" | "),function(){
+        const isoutString = opts && opts.outputString;
         assert.equal(fncn.encode(data[0],opts),data[1]);
-        assert.equal(fncn.decode(data[1]),(+data[0]).toString());
+        assert.equal(fncn.decode(data[1],opts),(isoutString ? data[0] : +data[0]).toString());
     })
 })
 

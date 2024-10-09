@@ -69,6 +69,12 @@ nzhcn.encodeB("13.5", {tenMin:true});  // 拾叁點伍
 nzhcn.encodeS(1e16);                // 一万万亿
 nzhcn.encodeS(1e16, {ww: false});   // 一亿亿
 
+
+// options.outputString
+
+console.log(nzhcn.decodeS('一万万万万亿', {outputString: false}));   // 1e+24
+console.log(nzhcn.decodeS('一万万万万亿', {outputString: true}));    // "1000000000000000000000000"
+
 // options.complete
 
 nzhcn.toMoney("1");                        //人民币壹元整
@@ -85,6 +91,7 @@ nzhcn.toMoney("1",{outSymbol:false});      //壹元整
  - `tenMin`: 十的口语化开关, 默认值为 `false`
     - *注: `Nzh.cn`和`Nzh.hk`中的`encodeS`方法默认 `true`*
  - `ww`: "万万"化开关, 默认值为 `true`
+ - `outputString` 中文数字转阿阿拉伯数字时, 输出为字符串类型, 解决输出对出超大数时可能输出科学计数法的问题，默认 `false`;
  - `unOmitYuan`: 个为零时不省略元, `toMoney` 函数专用配置, 默认 `false` 
  - `complete`: 输出完整金额开关, `toMoney` 函数专用配置, 默认 `false` 
  - `forceZheng`: 以输出结果加“整”（只要输出的结果没有到分位就加“整”）, `toMoney` 函数专用配置, 默认 `false` 

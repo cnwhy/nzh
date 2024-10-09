@@ -91,7 +91,7 @@ function CL(num, options) {
  * @param {string} cnnumb 中文数字字符串
  * @returns Number
  */
-function unCL(cnnumb) {
+function unCL(cnnumb, options) {
 	cnnumb = cnnumb.toString();
 	var result = cnnumb.split(this.ch_d);
 	var _int = result[0].replace(this.ch_f, "")
@@ -145,7 +145,7 @@ function unCL(cnnumb) {
 
 	}
 	if (_minus) rnum_a.unshift('-');
-	return parseFloat(rnum_a.join(''));
+	return (options && options.outputString)  ? rnum_a.join('') : parseFloat(rnum_a.join(''));
 }
 
 /**
