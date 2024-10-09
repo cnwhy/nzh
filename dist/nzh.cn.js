@@ -1,5 +1,5 @@
 /*!
- * nzh v1.0.13
+ * nzh v1.0.14
  * Homepage http://cnwhy.github.io/nzh
  * License BSD-2-Clause
  */
@@ -269,7 +269,7 @@
 	 * @param {string} cnnumb 中文数字字符串
 	 * @returns Number
 	 */
-	function unCL(cnnumb) {
+	function unCL(cnnumb, options) {
 		cnnumb = cnnumb.toString();
 		var result = cnnumb.split(this.ch_d);
 		var _int = result[0].replace(this.ch_f, "")
@@ -280,8 +280,7 @@
 			, dw_w = this.ch_u.charAt(4)
 			, dw_y = this.ch_u.charAt(5);
 
-		_int = _int.replace(new RegExp(dw_w + "{2}", "g"), dw_y);
-
+		_int = _int.replace(new RegExp(dw_w + "{2}(?!"+dw_w+")", "g"), dw_y);
 		var cnarr = _int.split('');
 		var dw = 0, maxdw = 0;
 		var rnum_a = [], num_a = [], _num_a = [];
@@ -324,7 +323,7 @@
 
 		}
 		if (_minus) rnum_a.unshift('-');
-		return parseFloat(rnum_a.join(''));
+		return (options && options.outputString)  ? rnum_a.join('') : parseFloat(rnum_a.join(''));
 	}
 
 	/**
