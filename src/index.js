@@ -102,8 +102,7 @@ function unCL(cnnumb) {
 		, dw_w = this.ch_u.charAt(4)
 		, dw_y = this.ch_u.charAt(5);
 
-	_int = _int.replace(new RegExp(dw_w + "{2}", "g"), dw_y);
-
+	_int = _int.replace(new RegExp(dw_w + "{2}(?!"+dw_w+")", "g"), dw_y);
 	var cnarr = _int.split('');
 	var dw = 0, maxdw = 0;
 	var rnum_a = [], num_a = [], _num_a = [];
